@@ -124,7 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BatchRender.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="LoadShader.cpp" />
@@ -133,12 +133,14 @@
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="TastyEngine.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="tiny_obj_loader.cpp" />
+    <ClCompile Include="vboIndexer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="VertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BatchRender.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="LoadShader.h" />
@@ -146,6 +148,8 @@
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="TastyEngine.h" />
     <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="vboIndexer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FragmentShader.glsl" />

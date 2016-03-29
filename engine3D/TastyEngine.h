@@ -17,6 +17,8 @@
 #include "Camera.h"
 #include "OBJLoader.h"
 #include "ImageLoader.h"
+#include "vboIndexer.h"
+#include "SceneManager.h"
 
 using namespace glm;
 
@@ -39,6 +41,7 @@ private:
 	GLuint uvBuffer;
 	GLuint VertexArrayID;
 	GLuint normalBuffer;
+	GLuint elementBuffer;
 	Textures::Texture* texture;
 
 	GLuint MatrixID;
@@ -48,6 +51,10 @@ private:
 	GLuint TextureID;
 	GLuint LightID;
 
-	std::vector<glm::vec3> vertices;
+	std::vector<unsigned short> indices;
+	
+	Manager::SceneManager* manager;
+
+	glm::mat4 ModelMatrix = glm::mat4(1.0f);
 };
 
