@@ -5,11 +5,12 @@
 #include <glfw3.h>
 
 #include <glm.hpp>
+#include "tiny_obj_loader.h"
 
 class Objects
 {
 public:
-	Objects(GLuint indicesSize, GLuint vertexBuffer, GLuint UVBuffer, GLuint normalBuffer, GLuint elementBuffer, GLuint textureID, glm::vec3 pos, const char* ID);
+	Objects(GLuint indicesSize, GLuint vertexBuffer, GLuint UVBuffer, GLuint normalBuffer, GLuint elementBuffer, GLuint textureID, glm::vec3 pos, const char* ID, tinyobj::mesh_t mesh);
 	~Objects();
 
 
@@ -20,6 +21,7 @@ public:
 	GLuint GetElementBuffer(){ return elementBuffer; }
 	GLuint GetIndicesSize(){ return indicesSize; }
 	glm::vec3 GetPos(){ return pos; }
+	tinyobj::mesh_t mesh;
 
 private:
 	GLuint vertexBuffer;
@@ -28,6 +30,7 @@ private:
 	GLuint textureID;
 	GLuint elementBuffer;
 	GLuint indicesSize;
+	
 
 	glm::vec3 pos;
 	const char* ID;

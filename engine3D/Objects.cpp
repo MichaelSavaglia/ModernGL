@@ -1,7 +1,7 @@
 #include "Objects.h"
 
 
-Objects::Objects(GLuint indicesSize, GLuint vertexBuffer, GLuint UVBuffer, GLuint normalBuffer, GLuint elementBuffer, GLuint textureID, glm::vec3 pos, const char* ID)
+Objects::Objects(GLuint indicesSize, GLuint vertexBuffer, GLuint UVBuffer, GLuint normalBuffer, GLuint elementBuffer, GLuint textureID, glm::vec3 pos, const char* ID, tinyobj::mesh_t mesh)
 {
 	this->indicesSize = indicesSize;
 	this->vertexBuffer = vertexBuffer;
@@ -11,6 +11,7 @@ Objects::Objects(GLuint indicesSize, GLuint vertexBuffer, GLuint UVBuffer, GLuin
 	this->textureID = textureID;
 	this->pos = pos;
 	this->ID = ID;
+	this->mesh = mesh;
 }
 
 
