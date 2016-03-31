@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+#include <iostream>
 
 #include <glew.h>
 
@@ -22,9 +23,18 @@ namespace Manager
 		~SceneManager();
 		void Render();
 		void Update();
-		void AddObj(const char* texPath, const char* objPath, glm::vec3 pos, const char* ID);
+
+
+
+		bool DeleteObj(const char* ID);
+		void AddParent(const char* texPath, const char* objPath, const char* ID, glm::vec3 pos);
+		void AddChild(const char* texPath, const char* objPath, const char* ID,const char* parent, glm::vec3 pos);
 
 	private:
+
+		Objects* CreateObj(const char* texPath, const char* objPath, glm::vec3 pos, const char* ID);
+		void AddObj(Objects* obj);
+
 		glm::mat4 ProjectionMatrix;
 		glm::mat4 ViewMatrix;
 

@@ -6,6 +6,7 @@ namespace Manager
 	SceneManager::SceneManager(GLFWwindow* window, GLuint programID)
 	{
 		this->window = window;
+
 		MatrixID = glGetUniformLocation(programID, "MVP");
 		ViewMatrixID = glGetUniformLocation(programID, "V");
 		ModelMatrixID = glGetUniformLocation(programID, "M");
@@ -22,56 +23,52 @@ namespace Manager
 
 	void SceneManager::Update()
 	{
+		
 		computeMatricesFromInputs(window);
 		ProjectionMatrix = getProjectionMatrix();
 		ViewMatrix = getViewMatrix();
-
-
-
-		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
 	}
 
 
 	void SceneManager::Render()
 	{
+
 		for (int i = 0; i < objects.size(); i++)
 		{
-			glUseProgram(programID);
 
-			glm::mat4 ModelMatrix = glm::mat4(1.0);
+			glm::mat4 ModelMatrix = glm::mat4(1.0f);
 			ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
 			glm::mat4 mvp = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+
+
+			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+			glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+			glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+
+			glBindTexture(GL_TEXTURE_2D, objects[i]->GetTextureID());
 
 			glm::vec3 lightPos = glm::vec3(4, 4, 4);
 			glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
 
-			glBindTexture(GL_TEXTURE_2D, objects[i]->GetTextureID());
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glUniform1i(TextureID, 0);
 
-			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
-			glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
-
-
-			glBindBuffer(GL_ARRAY_BUFFER, objects[i]->GetVertexBuffer());
 			glEnableVertexAttribArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, objects[i]->GetVertexBuffer());
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-			glBindBuffer(GL_ARRAY_BUFFER, objects[i]->GetUVBuffer());
 			glEnableVertexAttribArray(1);
+			glBindBuffer(GL_ARRAY_BUFFER, objects[i]->GetUVBuffer());
 			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-			glBindBuffer(GL_ARRAY_BUFFER, objects[i]->GetNormalBuffer());
 			glEnableVertexAttribArray(2);
+			glBindBuffer(GL_ARRAY_BUFFER, objects[i]->GetNormalBuffer());
 			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, objects[i]->GetElementBuffer());
 			
 
-
-			
-			glDrawElements(GL_TRIANGLES, objects[i]->mesh.indices.size(), GL_UNSIGNED_INT, &objects[i]->mesh.indices[0]);
+			glDrawElements(GL_TRIANGLES, objects[i]->mesh.indices.size(), GL_UNSIGNED_INT, 0);
 
 			glDisableVertexAttribArray(0);
 			glDisableVertexAttribArray(1);
@@ -79,7 +76,7 @@ namespace Manager
 		}
 	}
 
-	void SceneManager::AddObj(const char* texPath, const char* objPath, glm::vec3 pos, const char* ID)
+	Objects* SceneManager::CreateObj(const char* texPath, const char* objPath, glm::vec3 pos, const char* ID)
 	{
 		tinyobj::LoadObj(shapes, materials, err, objPath);
 		Textures::Texture* tex = Textures::LoadIMG(texPath);
@@ -109,6 +106,45 @@ namespace Manager
 
 		Objects* obj = new Objects(shapes[0].mesh.indices.size(), vertBuf, uvBuf, normBuf, elemBuf, tex->textureID, pos, ID, tempMesh);
 
+	}
+
+
+	void SceneManager::AddParent(const char* texPath, const char* objPath, const char* ID, glm::vec3 pos)
+	{
+		Objects* tempObj = CreateObj(texPath, objPath, pos, ID);
+		tempObj->SetParent(nullptr);
+		AddObj(tempObj);
+	}
+
+	void SceneManager::AddChild(const char* texPath, const char* objPath, const char* ID, const char* parent, glm::vec3 pos)
+	{
+		for (int i = 0; i < objects.size(); i++)
+		{
+			if (std::strcmp(parent, objects[i]->GetID()) == 0)
+			{
+				pos += objects[i]->GetPos();
+
+			}
+		}
+		std::cout << "Error: Parent not found" << std::endl;
+	}
+
+	void SceneManager::AddObj(Objects* obj)
+	{
 		objects.push_back(obj);
+	}
+
+	bool SceneManager::DeleteObj(const char* ID)
+	{
+		for (int i = 0; i < objects.size(); i++)
+		{
+			if (std::strcmp(ID, objects[i]->GetID()) == 0)
+			{
+				objects.erase(objects.begin() + i);
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

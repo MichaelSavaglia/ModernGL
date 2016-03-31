@@ -19,3 +19,19 @@ Objects::~Objects()
 {
 }
 
+void Objects::SetParent(Objects* parent)
+{
+	if (this->parent == nullptr)
+	{
+		this->parent = parent;
+	}
+	else
+	{
+		std::cout << "Error: This object already has a parent" << std::endl;
+	}
+}
+
+void Objects::AddChild(Objects* child)
+{
+	children.push_back(child);
+}

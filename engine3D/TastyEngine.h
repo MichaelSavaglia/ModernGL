@@ -52,9 +52,10 @@ private:
 	GLuint LightID;
 
 	std::vector<unsigned short> indices;
+	std::vector<glm::vec3> vertices;
 	
 	Manager::SceneManager* manager;
 
-	glm::mat4 ModelMatrix = glm::mat4(1.0f);
+
 };
 

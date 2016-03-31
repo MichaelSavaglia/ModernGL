@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include <glew.h>
 
 #include <glfw3.h>
@@ -20,8 +22,13 @@ public:
 	GLuint GetTextureID(){ return textureID; };
 	GLuint GetElementBuffer(){ return elementBuffer; }
 	GLuint GetIndicesSize(){ return indicesSize; }
+	const char* GetID(){ return ID; }
 	glm::vec3 GetPos(){ return pos; }
 	tinyobj::mesh_t mesh;
+
+	void SetParent(Objects* parent);
+	void AddChild(Objects* child);
+
 
 private:
 	GLuint vertexBuffer;
@@ -30,7 +37,11 @@ private:
 	GLuint textureID;
 	GLuint elementBuffer;
 	GLuint indicesSize;
-	
+
+
+	Objects* parent;
+	std::vector<Objects*> children;
+
 
 	glm::vec3 pos;
 	const char* ID;
