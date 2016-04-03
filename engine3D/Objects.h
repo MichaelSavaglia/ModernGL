@@ -9,41 +9,45 @@
 #include <glm.hpp>
 #include "tiny_obj_loader.h"
 
+struct ObjPack
+{
+	const char* ID; 
+	GLuint vertexBuffer;
+	GLuint UVBuffer;
+	GLuint normalBuffer;
+	GLuint elementBuffer;
+	GLuint indicesSize;
+};
+
 class Objects
 {
 public:
-	Objects(GLuint indicesSize, GLuint vertexBuffer, GLuint UVBuffer, GLuint normalBuffer, GLuint elementBuffer, GLuint textureID, glm::vec3 pos, const char* ID, tinyobj::mesh_t mesh);
+	Objects(ObjPack* objData, GLuint textureID, glm::vec3 pos, const char* ID);
 	~Objects();
 
 
-	GLuint GetVertexBuffer() {return vertexBuffer;};
-	GLuint GetUVBuffer(){ return UVBuffer; };
-	GLuint GetNormalBuffer(){ return normalBuffer; };
-	GLuint GetTextureID(){ return textureID; };
-	GLuint GetElementBuffer(){ return elementBuffer; }
-	GLuint GetIndicesSize(){ return indicesSize; }
+	ObjPack* GetObjData(){ return objData; }
+	GLuint GetTextureID(){ return textureID; }
 	const char* GetID(){ return ID; }
 	glm::vec3 GetPos(){ return pos; }
-	tinyobj::mesh_t mesh;
+	void SetPos(glm::vec3 nPos){ this->pos = nPos; }
 
 	void SetParent(Objects* parent);
 	void AddChild(Objects* child);
 
 
 private:
-	GLuint vertexBuffer;
-	GLuint UVBuffer;
-	GLuint normalBuffer;
-	GLuint textureID;
-	GLuint elementBuffer;
-	GLuint indicesSize;
 
+
+	ObjPack* objData;
 
 	Objects* parent;
 	std::vector<Objects*> children;
 
-
+	GLuint textureID;
 	glm::vec3 pos;
 	const char* ID;
 };
+
+
 

@@ -56,6 +56,6 @@ private:
 	
 	Manager::SceneManager* manager;
 
-
+	bool moved = false;
 };
 

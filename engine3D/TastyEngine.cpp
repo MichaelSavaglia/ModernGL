@@ -73,8 +73,16 @@ void TastyEngine::LoadObjects()
 	
 	manager = new Manager::SceneManager(window, programID);
 
-	//manager->AddObj("uvmap.bmp", "suzanne.obj", glm::vec3(0.0f, 0.0f, 1.0f), "FirstOBJ");
-	//manager->AddObj("uvmap.bmp", "cube.obj", glm::vec3(2.0f, 0.0f, 0.0f), "cube");
+	manager->LoadObjFile("cube.obj");
+	manager->LoadObjFile("suzanne.obj");
+	manager->LoadObjFile("mars.obj");
+
+	manager->AddParent("uvmap.bmp", "suzanne.obj", "FirstOBJ", glm::vec3(0.0f, 0.0f, 1.0f));
+	manager->AddParent("uvmap.bmp", "suzanne.obj", "FirstOBJ 2", glm::vec3(0.0f, 5.0f, 0.0f));
+	manager->AddParent("uvmap.bmp", "cube.obj", "cube", glm::vec3(10.0f, 1.0f, 0.0f));
+	manager->AddChild("uvmap.bmp", "mars.obj", "firstChild", "cube", glm::vec3(3.0f, 1.0f, 0.0f));
+	manager->AddChild("uvmap.bmp", "mars.obj", "mars", "firstChild", glm::vec3(-1.0f, -1.0f, 0.0f));
+	
 }
 
 void TastyEngine::StartLoop()
@@ -86,9 +94,11 @@ void TastyEngine::StartLoop()
 
 		manager->Update();
 		manager->Render();
-		manager->DeleteObj("FirstOBJ");
+
 
 		
+		
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 

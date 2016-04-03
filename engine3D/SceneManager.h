@@ -24,16 +24,22 @@ namespace Manager
 		void Render();
 		void Update();
 
+		bool LoadObjFile(const char* path);
 
 
 		bool DeleteObj(const char* ID);
-		void AddParent(const char* texPath, const char* objPath, const char* ID, glm::vec3 pos);
-		void AddChild(const char* texPath, const char* objPath, const char* ID,const char* parent, glm::vec3 pos);
+		bool AddParent(const char* texPath, const char* objPath, const char* ID, glm::vec3 pos);
+		bool AddChild(const char* texPath, const char* objPath, const char* ID,const char* parent, glm::vec3 pos);
+
+		Objects* AccessObject(const char* ID);
 
 	private:
 
 		Objects* CreateObj(const char* texPath, const char* objPath, glm::vec3 pos, const char* ID);
 		void AddObj(Objects* obj);
+		Objects* FindObj(const char* ID);
+
+		
 
 		glm::mat4 ProjectionMatrix;
 		glm::mat4 ViewMatrix;
@@ -47,6 +53,7 @@ namespace Manager
 		GLuint LightID;
 
 		std::vector<Objects*>objects;
+		std::vector<ObjPack*> objData;
 
 		std::vector<tinyobj::shape_t> shapes;
 		std::vector<tinyobj::material_t> materials;
