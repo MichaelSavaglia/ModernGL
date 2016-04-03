@@ -36,20 +36,17 @@ public:
 private:
 	GLFWwindow* window;
 	GLuint programID;
-	GLuint Texture;
-	GLuint vertexBuffer;
-	GLuint uvBuffer;
+
 	GLuint VertexArrayID;
-	GLuint normalBuffer;
-	GLuint elementBuffer;
+
 	Textures::Texture* texture;
 
-	GLuint MatrixID;
-	GLuint ViewMatrixID;
-	GLuint ModelMatrixID;
-
-	GLuint TextureID;
-	GLuint LightID;
+	ObjPack* cubeObj;
+	ObjPack* suzanne;
+	ObjPack* mars;
+	GLuint* uvmapID;
+	Objects* firstObj;
+	Objects* cube;
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> vertices;

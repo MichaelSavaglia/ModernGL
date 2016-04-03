@@ -1,12 +1,12 @@
 #include "Objects.h"
 
 
-Objects::Objects(ObjPack* objData, GLuint textureID, glm::vec3 pos, const char* ID)
+Objects::Objects(ObjPack* objData, GLuint* texID, glm::vec3 pos)
 {
 	this->objData = objData;
-	this->textureID = textureID;
+	this->textureID = texID;
 	this->pos = pos;
-	this->ID = ID;
+
 
 }
 

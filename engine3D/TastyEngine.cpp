@@ -73,16 +73,19 @@ void TastyEngine::LoadObjects()
 	
 	manager = new Manager::SceneManager(window, programID);
 
-	manager->LoadObjFile("cube.obj");
-	manager->LoadObjFile("suzanne.obj");
-	manager->LoadObjFile("mars.obj");
+	cubeObj = manager->LoadObjFile("cube.obj");
+	suzanne = manager->LoadObjFile("suzanne.obj");
+	mars = manager->LoadObjFile("mars.obj");
 
-	manager->AddParent("uvmap.bmp", "suzanne.obj", "FirstOBJ", glm::vec3(0.0f, 0.0f, 1.0f));
-	manager->AddParent("uvmap.bmp", "suzanne.obj", "FirstOBJ 2", glm::vec3(0.0f, 5.0f, 0.0f));
-	manager->AddParent("uvmap.bmp", "cube.obj", "cube", glm::vec3(10.0f, 1.0f, 0.0f));
-	manager->AddChild("uvmap.bmp", "mars.obj", "firstChild", "cube", glm::vec3(3.0f, 1.0f, 0.0f));
-	manager->AddChild("uvmap.bmp", "mars.obj", "mars", "firstChild", glm::vec3(-1.0f, -1.0f, 0.0f));
-	
+	uvmapID = manager->LoadTexture("uvmap.bmp");
+
+	firstObj = manager->CreateObj(suzanne, uvmapID, glm::vec3(0, 0, 0));
+	cube = manager->CreateObj(cubeObj, uvmapID, glm::vec3(4, 0, 0));
+
+	manager->AddItemToRenderer(firstObj);
+	manager->AddItemToRenderer(cube);
+
+
 }
 
 void TastyEngine::StartLoop()
@@ -96,7 +99,7 @@ void TastyEngine::StartLoop()
 		manager->Render();
 
 
-		
+		cube->SetPos(cube->GetPos() + glm::vec3(0.01, 0, 0));
 		
 
 		glfwSwapBuffers(window);

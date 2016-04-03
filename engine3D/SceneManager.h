@@ -24,22 +24,20 @@ namespace Manager
 		void Render();
 		void Update();
 
-		bool LoadObjFile(const char* path);
 
+		ObjPack* LoadObjFile(const char* path);
+		GLuint* LoadTexture(const char* path);
 
-		bool DeleteObj(const char* ID);
-		bool AddParent(const char* texPath, const char* objPath, const char* ID, glm::vec3 pos);
-		bool AddChild(const char* texPath, const char* objPath, const char* ID,const char* parent, glm::vec3 pos);
+		Objects* CreateObj(ObjPack* objData, GLuint* texID, glm::vec3 pos);
 
-		Objects* AccessObject(const char* ID);
+		void AddItemToRenderer(Objects* obj);
+		void RemoveItemFromRenderer(Objects* obj);
+
 
 	private:
-
-		Objects* CreateObj(const char* texPath, const char* objPath, glm::vec3 pos, const char* ID);
-		void AddObj(Objects* obj);
-		Objects* FindObj(const char* ID);
-
 		
+		void AddObj(Objects* obj);
+
 
 		glm::mat4 ProjectionMatrix;
 		glm::mat4 ViewMatrix;

@@ -46,7 +46,7 @@ namespace Manager
 			glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
 			glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
 
-			glBindTexture(GL_TEXTURE_2D, objects[i]->GetTextureID());
+			glBindTexture(GL_TEXTURE_2D, *objects[i]->GetTextureID());
 
 			glm::vec3 lightPos = glm::vec3(4, 4, 4);
 			glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
@@ -76,18 +76,8 @@ namespace Manager
 		}
 	}
 
-	bool SceneManager::LoadObjFile(const char* path)
+	ObjPack* SceneManager::LoadObjFile(const char* path)
 	{
-		for (int i = 0; i < objData.size(); i++)
-		{
-			if (std::strcmp(path, objData[i]->ID) == 0)
-			{
-				std::cout << "Error: Obj already loaded" << std::endl;
-				return false;
-			}
-		}
-
-
 		tinyobj::LoadObj(shapes, materials, err, path);
 
 		tinyobj::mesh_t tempMesh = shapes[0].mesh;
@@ -121,108 +111,51 @@ namespace Manager
 		tempObjData->indicesSize = tempMesh.indices.size();
 		tempObjData->ID = path;
 
-		objData.push_back(tempObjData);
+		return tempObjData;
 	}
 
-	Objects* SceneManager::CreateObj(const char* texPath, const char* objID, glm::vec3 pos, const char* ID)
+	GLuint* SceneManager::LoadTexture(const char* path)
 	{
-		
-		Textures::Texture* tex = Textures::LoadIMG(texPath);
+		Textures::Texture* tex = Textures::LoadIMG(path);
+		return &tex->textureID;
 
-		for (int i = 0; i < objData.size(); i++)
-		{
-			if (std::strcmp(objID, objData[i]->ID) == 0)
-			{
-				Objects* obj = new Objects(objData[i], tex->textureID, pos, ID);
-				return obj;
-			}
-			
-		}
-		return false;
 	}
 
 
-	bool SceneManager::AddParent(const char* texPath, const char* objID, const char* ID, glm::vec3 pos)
+	void SceneManager::AddItemToRenderer(Objects* obj)
+	{
+		AddObj(obj);
+	}
+
+
+	void SceneManager::RemoveItemFromRenderer(Objects* obj)
 	{
 		for (int i = 0; i < objects.size(); i++)
 		{
-			if (std::strcmp(ID, objects[i]->GetID()) == 0)
+			if (obj == objects[i])
 			{
-				std::cout << "Error: An object with this ID already exists: " << ID << std::endl;
-				return false;
+				objects.erase(objects.begin() + i);
 			}
 		}
-		Objects* tempObj = CreateObj(texPath, objID, pos, ID);
-		tempObj->SetParent(nullptr);
-		AddObj(tempObj);
-		return true;
 	}
 
-	bool SceneManager::AddChild(const char* texPath, const char* objPath, const char* ID, const char* parent, glm::vec3 pos)
+
+
+
+
+
+	Objects* SceneManager::CreateObj(ObjPack* objData, GLuint* texID, glm::vec3 pos)
 	{
-		if (FindObj(ID) != false)
-		{
-				std::cout << "Error: An object with this ID already exists: " << ID << std::endl;
-				return false;
-				
-		}
-		
-
-		for (int i = 0; i < objects.size(); i++)
-		{
-			if (std::strcmp(parent, objects[i]->GetID()) == 0)
-			{
-				pos += objects[i]->GetPos();
-				Objects* tempObj = CreateObj(texPath, objPath, pos, ID);
-				tempObj->SetParent(objects[i]);
-				AddObj(tempObj);
-				
-				return true;
-			}
-		}
-		std::cout << "Error: Parent not found" << std::endl;
-		return false;
+		Objects* tempObj = new Objects(objData, texID, pos);
+		return tempObj;
 	}
+
+
 
 	void SceneManager::AddObj(Objects* obj)
 	{
 		objects.push_back(obj);
 	}
 
-	bool SceneManager::DeleteObj(const char* ID)
-	{
-		for (int i = 0; i < objects.size(); i++)
-		{
-			if (std::strcmp(ID, objects[i]->GetID()) == 0)
-			{
-				objects.erase(objects.begin() + i);
-				return true;
-			}
-		}
-		std::cout << "Error: Object not found: " << ID << std::endl;
-		return false;
-	}
 
-	Objects* SceneManager::AccessObject(const char* ID)
-	{
-		Objects* tempObj = FindObj(ID);
-		if (tempObj == NULL)
-		{
-			std::cout << "Error: Object not found: " << ID << std::endl;
-			return false;
-		}
-		return tempObj;
-	}
-
-	Objects* SceneManager::FindObj(const char* ID)
-	{
-		for (int i = 0; i < objects.size(); i++)
-		{
-			if (std::strcmp(ID, objects[i]->GetID()) == 0)
-			{
-				return objects[i];
-			}
-		}
-		return false;
-	}
 }
