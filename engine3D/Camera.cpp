@@ -25,7 +25,7 @@ float speed = 3.0f;
 float mouseSpeed = 0.05f;
 
 
-void computeMatricesFromInputs(GLFWwindow* window)
+void computeMatricesFromInputs(GLFWwindow* window, bool active)
 {
 	static double lastTime = glfwGetTime();
 	double currentTime = glfwGetTime();
@@ -35,12 +35,16 @@ void computeMatricesFromInputs(GLFWwindow* window)
 	glfwGetWindowSize(window, &width, &height);
 	
 	double xpos, ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
+	if (active == false)
+	{
+		glfwGetCursorPos(window, &xpos, &ypos);
 
-	glfwSetCursorPos(window, width / 2, height / 2);
+		glfwSetCursorPos(window, width / 2, height / 2);
 
-	horizontalAngle += mouseSpeed * deltaTime * float(width / 2 - xpos);
-	verticalAngle	+= mouseSpeed * deltaTime * float(height / 2 - ypos);
+	
+		horizontalAngle += mouseSpeed * deltaTime * float(width / 2 - xpos);
+		verticalAngle += mouseSpeed * deltaTime * float(height / 2 - ypos);
+	}
 
 	glm::vec3 direction(
 		cos(verticalAngle) * sin(horizontalAngle),

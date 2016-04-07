@@ -1,4 +1,4 @@
-#version 450 core
+#version 430 core
 
 in  vec2 UV;
 in vec3 Position_worldspace;
@@ -11,16 +11,17 @@ out vec3 color;
 uniform sampler2D myTextureSampler;
 uniform mat4 MV;
 uniform vec3 LightPosition_worldspace;
+uniform vec3 LightColor;
 
 void main()
 {
 
-	vec3 LightColor = vec3(1,1,1);
+
 	float LightPower = 50.0f;
 	
 	vec3 MaterialDiffuseColor = texture( myTextureSampler, UV ).rgb;
 	vec3 MaterialAmbientColor = vec3(0.1,0.1,0.1) * MaterialDiffuseColor;
-	vec3 MaterialSpecularColor = vec3(0.3,0.3,0.3);
+	vec3 MaterialSpecularColor = vec3(0.2,0.2,0.2);
 
 	float distance = length( LightPosition_worldspace - Position_worldspace );
 
@@ -35,9 +36,9 @@ void main()
 
 	float cosAlpha = clamp( dot( E,R ), 0,1 );
 	
-	color = 
+	color =
 		MaterialAmbientColor +
 		MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance*distance) +
-		MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,5) / (distance*distance);
+		MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, 5) / (distance*distance);
 
 }

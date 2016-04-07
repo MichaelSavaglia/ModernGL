@@ -10,6 +10,6 @@ using namespace glm;
 
 
 
-void computeMatricesFromInputs(GLFWwindow* window);
+void computeMatricesFromInputs(GLFWwindow* window, bool active);
 glm::mat4 getViewMatrix();
 glm::mat4 getProjectionMatrix();

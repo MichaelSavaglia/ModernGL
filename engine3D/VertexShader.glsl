@@ -1,4 +1,4 @@
-#version 450 core
+#version 430 core
 
 layout(location = 0) in vec3 vertexPosition_modelspace;
 layout(location = 1) in vec2 vertexUV;
@@ -34,7 +34,7 @@ void main(){
 	LightDirection_cameraspace = LightPosition_cameraspace + EyeDirection_cameraspace;
 	
 
-	Normal_cameraspace = ( V * M * vec4(vertexNormal_modelspace,0)).xyz; // Only correct if ModelMatrix does not scale the model ! Use its inverse transpose if not.
+	Normal_cameraspace = ( V * M * vec4(vertexNormal_modelspace,0)).xyz; 
 	
 	UV = vertexUV;
 }

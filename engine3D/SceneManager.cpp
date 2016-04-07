@@ -14,6 +14,9 @@ namespace Manager
 		TextureID = glGetUniformLocation(programID, "myTextureSampler");
 
 		LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
+		LightColourID = glGetUniformLocation(programID, "LightColor");
+
+		lightColor = glm::vec3(1, 1, 1);
 	}
 
 
@@ -24,7 +27,7 @@ namespace Manager
 	void SceneManager::Update()
 	{
 		
-		computeMatricesFromInputs(window);
+		computeMatricesFromInputs(window, mouseActive);
 		ProjectionMatrix = getProjectionMatrix();
 		ViewMatrix = getViewMatrix();
 	}
@@ -32,9 +35,31 @@ namespace Manager
 
 	void SceneManager::Render()
 	{
+		
+		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+		{
+			lightColor = glm::vec3(1, 1, 1);
+		}
+		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+		{
+			lightColor = glm::vec3(0, 1, 1);
+		}
+		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+		{
+			lightColor = glm::vec3(1, 0, 1);
+		}
+		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+		{
+			lightColor = glm::vec3(1, 1, 0);
+		}
+		glUniform3f(LightColourID, lightColor.x, lightColor.y, lightColor.z);
 
 		for (int i = 0; i < objects.size(); i++)
 		{
+			/*glm::quat MyQuaternion;
+			glm::vec3 EulerAngles(90, 45, 0);
+			MyQuaternion = glm::quat(EulerAngles);
+			MyQuaternion =*/
 
 			glm::mat4 ModelMatrix = glm::mat4(1.0f);
 			ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
@@ -139,11 +164,6 @@ namespace Manager
 		}
 	}
 
-
-
-
-
-
 	Objects* SceneManager::CreateObj(ObjPack* objData, GLuint* texID, glm::vec3 pos)
 	{
 		Objects* tempObj = new Objects(objData, texID, pos);
@@ -158,4 +178,18 @@ namespace Manager
 	}
 
 
+	void SceneManager::ShowMouse()
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		mouseActive = true;
+	}
+
+	void SceneManager::HideMouse()
+	{
+		int width, height;
+		glfwGetWindowSize(window, &width, &height);
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetCursorPos(window, width / 2, height / 2);
+		mouseActive = false;
+	}
 }

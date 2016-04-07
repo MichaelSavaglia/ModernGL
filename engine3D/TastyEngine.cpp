@@ -25,7 +25,7 @@ bool TastyEngine::Init()
 
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
@@ -73,17 +73,21 @@ void TastyEngine::LoadObjects()
 	
 	manager = new Manager::SceneManager(window, programID);
 
-	cubeObj = manager->LoadObjFile("cube.obj");
+	cubeObj = manager->LoadObjFile("wall.obj");
 	suzanne = manager->LoadObjFile("suzanne.obj");
 	mars = manager->LoadObjFile("mars.obj");
 
 	uvmapID = manager->LoadTexture("uvmap.bmp");
+	wallPaper = manager->LoadTexture("wallpaper.jpg");
+	marsTex = manager->LoadTexture("Mars.bmp");
 
 	firstObj = manager->CreateObj(suzanne, uvmapID, glm::vec3(0, 0, 0));
-	cube = manager->CreateObj(cubeObj, uvmapID, glm::vec3(4, 0, 0));
+	cube = manager->CreateObj(cubeObj, wallPaper, glm::vec3(0, 0, 0));
+	marsObj = manager->CreateObj(mars, marsTex, glm::vec3(0, 0, 5));
 
 	manager->AddItemToRenderer(firstObj);
 	manager->AddItemToRenderer(cube);
+	manager->AddItemToRenderer(marsObj);
 
 
 }
@@ -99,8 +103,25 @@ void TastyEngine::StartLoop()
 		manager->Render();
 
 
-		cube->SetPos(cube->GetPos() + glm::vec3(0.01, 0, 0));
-		
+		//cube->SetPos(cube->GetPos() + glm::vec3(0.01, 0, 0));
+		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && mouseActive == false && qKeyUp)
+		{
+			qKeyUp = false;
+			manager->ShowMouse();
+			mouseActive = true;
+			
+		}
+		else if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && mouseActive == true && qKeyUp)
+		{
+			qKeyUp = false;
+			manager->HideMouse();
+			mouseActive = false;
+
+		}
+		else if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_RELEASE)
+		{
+			qKeyUp = true;
+		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

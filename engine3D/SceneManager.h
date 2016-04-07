@@ -9,6 +9,9 @@
 #include <glew.h>
 
 #include <glfw3.h>
+#include <gtc\quaternion.hpp>
+#include <gtx\quaternion.hpp>
+
 #include "Objects.h"
 #include "ImageLoader.h"
 #include "tiny_obj_loader.h"
@@ -32,12 +35,14 @@ namespace Manager
 
 		void AddItemToRenderer(Objects* obj);
 		void RemoveItemFromRenderer(Objects* obj);
-
+		void ShowMouse();
+		void HideMouse();
 
 	private:
 		
 		void AddObj(Objects* obj);
 
+		bool mouseActive = false;
 
 		glm::mat4 ProjectionMatrix;
 		glm::mat4 ViewMatrix;
@@ -49,6 +54,9 @@ namespace Manager
 
 		GLuint TextureID;
 		GLuint LightID;
+		GLuint LightColourID;
+
+		glm::vec3 lightColor = glm::vec3(1, 1, 1);
 
 		std::vector<Objects*>objects;
 		std::vector<ObjPack*> objData;

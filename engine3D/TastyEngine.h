@@ -45,8 +45,14 @@ private:
 	ObjPack* suzanne;
 	ObjPack* mars;
 	GLuint* uvmapID;
+	GLuint* wallPaper;
+	GLuint* marsTex;
 	Objects* firstObj;
 	Objects* cube;
+	Objects* marsObj;
+
+	bool mouseActive = false;
+	bool qKeyUp = true;
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> vertices;

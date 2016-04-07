@@ -35,6 +35,7 @@ public:
 	void SetParent(Objects* parent);
 	void AddChild(Objects* child);
 
+	//virtual void Update();
 
 private:
 
@@ -47,6 +48,9 @@ private:
 	GLuint* textureID;
 	glm::vec3 pos;
 	const char* ID;
+
+protected:
+
 };
 
 
