@@ -11,11 +11,13 @@
 #include <glfw3.h>
 #include <gtc\quaternion.hpp>
 #include <gtx\quaternion.hpp>
+#include <gtx/euler_angles.hpp>
 
 #include "Objects.h"
 #include "ImageLoader.h"
 #include "tiny_obj_loader.h"
 #include "Camera.h"
+
 
 namespace Manager
 {
@@ -39,11 +41,13 @@ namespace Manager
 		void HideMouse();
 
 	private:
-		
+		vec3 orientation = vec3(0, 0, 0);
+
 		void AddObj(Objects* obj);
 
 		bool mouseActive = false;
 
+		glm::mat4 ModelMatrix;
 		glm::mat4 ProjectionMatrix;
 		glm::mat4 ViewMatrix;
 

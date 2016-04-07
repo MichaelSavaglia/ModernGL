@@ -73,7 +73,7 @@ void TastyEngine::LoadObjects()
 	
 	manager = new Manager::SceneManager(window, programID);
 
-	cubeObj = manager->LoadObjFile("wall.obj");
+	cubeObj = manager->LoadObjFile("newWalls.obj");
 	suzanne = manager->LoadObjFile("suzanne.obj");
 	mars = manager->LoadObjFile("mars.obj");
 
@@ -81,14 +81,14 @@ void TastyEngine::LoadObjects()
 	wallPaper = manager->LoadTexture("wallpaper.jpg");
 	marsTex = manager->LoadTexture("Mars.bmp");
 
-	firstObj = manager->CreateObj(suzanne, uvmapID, glm::vec3(0, 0, 0));
+	firstObj = manager->CreateObj(suzanne, uvmapID, glm::vec3(0, 2, 0));
 	cube = manager->CreateObj(cubeObj, wallPaper, glm::vec3(0, 0, 0));
-	marsObj = manager->CreateObj(mars, marsTex, glm::vec3(0, 0, 5));
-
+	marsObj = manager->CreateObj(mars, marsTex, glm::vec3(2, 2, 0));
+	
+	cube->SetRotate(glm::vec3(0, 90, 0));
 	manager->AddItemToRenderer(firstObj);
 	manager->AddItemToRenderer(cube);
 	manager->AddItemToRenderer(marsObj);
-
 
 }
 
@@ -102,6 +102,9 @@ void TastyEngine::StartLoop()
 		manager->Update();
 		manager->Render();
 
+		marsObj->SetRotate(glm::vec3(0, monkeyRot, 0));
+		firstObj->SetRotate(glm::vec3(0, monkeyRot, 0));
+		monkeyRot += 0.2;
 
 		//cube->SetPos(cube->GetPos() + glm::vec3(0.01, 0, 0));
 		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && mouseActive == false && qKeyUp)
@@ -109,7 +112,6 @@ void TastyEngine::StartLoop()
 			qKeyUp = false;
 			manager->ShowMouse();
 			mouseActive = true;
-			
 		}
 		else if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && mouseActive == true && qKeyUp)
 		{

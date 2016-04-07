@@ -17,6 +17,7 @@ namespace Manager
 		LightColourID = glGetUniformLocation(programID, "LightColor");
 
 		lightColor = glm::vec3(1, 1, 1);
+
 	}
 
 
@@ -26,7 +27,6 @@ namespace Manager
 
 	void SceneManager::Update()
 	{
-		
 		computeMatricesFromInputs(window, mouseActive);
 		ProjectionMatrix = getProjectionMatrix();
 		ViewMatrix = getViewMatrix();
@@ -60,9 +60,22 @@ namespace Manager
 			glm::vec3 EulerAngles(90, 45, 0);
 			MyQuaternion = glm::quat(EulerAngles);
 			MyQuaternion =*/
+			
+			ModelMatrix = glm::mat4(1.0f);
 
-			glm::mat4 ModelMatrix = glm::mat4(1.0f);
 			ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
+			
+			
+			
+				if (objects[i]->GetRot() == true)
+				{
+					orientation = *objects[i]->GetRotVals();
+					glm::mat4 rotationMatrix = eulerAngleYXZ(orientation.y, orientation.x, orientation.z);
+					ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
+					ModelMatrix *= rotationMatrix;
+				}
+			
+			
 			glm::mat4 mvp = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
 			ObjPack* tempObj = objects[i]->GetObjData();
@@ -73,7 +86,7 @@ namespace Manager
 
 			glBindTexture(GL_TEXTURE_2D, *objects[i]->GetTextureID());
 
-			glm::vec3 lightPos = glm::vec3(4, 4, 4);
+			glm::vec3 lightPos = glm::vec3(0, 10, 2);
 			glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
 
 			glUniform1i(TextureID, 0);

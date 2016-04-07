@@ -20,6 +20,7 @@
 #include "vboIndexer.h"
 #include "SceneManager.h"
 
+
 using namespace glm;
 
 
@@ -47,9 +48,15 @@ private:
 	GLuint* uvmapID;
 	GLuint* wallPaper;
 	GLuint* marsTex;
+
 	Objects* firstObj;
+	float monkeyRot = 0;
+
+
 	Objects* cube;
 	Objects* marsObj;
+	
+
 
 	bool mouseActive = false;
 	bool qKeyUp = true;

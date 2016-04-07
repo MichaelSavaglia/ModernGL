@@ -35,11 +35,16 @@ public:
 	void SetParent(Objects* parent);
 	void AddChild(Objects* child);
 
+	void SetRotate(glm::vec3 rot);
+	bool GetRot();
+	glm::vec3* GetRotVals();
+
 	//virtual void Update();
 
 private:
 
-
+	glm::vec3 rot;
+	bool rotate = false;
 	ObjPack* objData;
 
 	Objects* parent;

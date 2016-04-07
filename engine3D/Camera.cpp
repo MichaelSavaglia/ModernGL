@@ -30,7 +30,7 @@ void computeMatricesFromInputs(GLFWwindow* window, bool active)
 	static double lastTime = glfwGetTime();
 	double currentTime = glfwGetTime();
 	float deltaTime = float(currentTime - lastTime);
-
+	
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
 	
@@ -51,13 +51,13 @@ void computeMatricesFromInputs(GLFWwindow* window, bool active)
 		sin(verticalAngle),
 		cos(verticalAngle) * cos(horizontalAngle));
 
-	glm::vec3 right = glm::vec3(
+	glm::vec3 right(
 		sin(horizontalAngle - 3.14f / 2.0f),
 		0,
 		cos(horizontalAngle - 3.14f / 2.0f));
 
 	glm::vec3 up = glm::cross(right, direction);
-
+	
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 		position += direction * deltaTime * speed;
