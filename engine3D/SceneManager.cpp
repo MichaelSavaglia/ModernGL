@@ -53,6 +53,22 @@ namespace Manager
 			ImGui::SliderFloat("Green", &tempLightColor->y, 0.0f, 1.0f);
 			ImGui::SliderFloat("Blue", &tempLightColor->z, 0.0f, 1.0f);
 		}
+		if (ImGui::CollapsingHeader("Light position"))
+		{
+			ImGui::Text("Modify the rgb values\n" "of the lighting");
+
+			ImGui::SliderFloat("x", &tempLightPos->x, -5.0f, 5.0f);
+			ImGui::SliderFloat("y", &tempLightPos->y, -5.0f, 10.0f);
+			ImGui::SliderFloat("z", &tempLightPos->z, -5.0f, 5.0f);
+		}
+		if (ImGui::CollapsingHeader("Light intensity"))
+		{
+			ImGui::SliderFloat("Intensity", &tempLightPower, 0.0f, 100.0f);
+		}
+
+		activeLight->SetColor(*tempLightColor);
+		activeLight->SetPos(*tempLightPos);
+		activeLight->SetPower(tempLightPower);
 		
 		ImGui::End();
 
