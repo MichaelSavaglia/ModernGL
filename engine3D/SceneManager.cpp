@@ -15,8 +15,11 @@ namespace Manager
 
 		LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
 		LightColourID = glGetUniformLocation(programID, "LightColor");
+		LightPowerID = glGetUniformLocation(programID, "LightPower");
 
-		lightColor = glm::vec3(1, 1, 1);
+		activeLight = new Light(glm::vec3(0, 10, 2), glm::vec3(1,1,1), 50);
+
+		//lightColor = glm::vec3(1, 1, 1);
 
 	}
 
@@ -35,24 +38,24 @@ namespace Manager
 
 	void SceneManager::Render()
 	{
+		glm::vec3* tempLightColor = &activeLight->GetColor();
+		float tempLightPower = activeLight->GetPower();
+		glm::vec3* tempLightPos = &activeLight->GetPos();
+
+		ImGui::Begin("Light data");
 		
-		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+		if (ImGui::CollapsingHeader("Light color"))
 		{
-			lightColor = glm::vec3(1, 1, 1);
+			ImGui::Text("Modify the rgb values\n" "of the lighting");
+			ImGui::SetWindowSize("Light Color", ImVec2(150, 70));
+			
+			ImGui::SliderFloat("Red", &tempLightColor->x, 0.0f, 1.0f);
+			ImGui::SliderFloat("Green", &tempLightColor->y, 0.0f, 1.0f);
+			ImGui::SliderFloat("Blue", &tempLightColor->z, 0.0f, 1.0f);
 		}
-		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
-		{
-			lightColor = glm::vec3(0, 1, 1);
-		}
-		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
-		{
-			lightColor = glm::vec3(1, 0, 1);
-		}
-		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
-		{
-			lightColor = glm::vec3(1, 1, 0);
-		}
-		glUniform3f(LightColourID, lightColor.x, lightColor.y, lightColor.z);
+		
+		ImGui::End();
+
 
 		for (int i = 0; i < objects.size(); i++)
 		{
@@ -86,8 +89,9 @@ namespace Manager
 
 			glBindTexture(GL_TEXTURE_2D, *objects[i]->GetTextureID());
 
-			glm::vec3 lightPos = glm::vec3(0, 10, 2);
-			glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
+			glUniform3f(LightColourID, tempLightColor->x, tempLightColor->y, tempLightColor->z);
+			glUniform1f(LightPowerID, tempLightPower);
+			glUniform3f(LightID, tempLightPos->x, tempLightPos->y, tempLightPos->z);
 
 			glUniform1i(TextureID, 0);
 
@@ -205,4 +209,32 @@ namespace Manager
 		glfwSetCursorPos(window, width / 2, height / 2);
 		mouseActive = false;
 	}
+
+	Light* SceneManager::CreateLight(glm::vec3 pos, glm::vec3 color, float power)
+	{
+		Light* tempLight = new Light(pos, color, power);
+		return tempLight;
+	}
+
+	void SceneManager::AddLight(Light* light)
+	{
+		lights.push_back(light);
+	}
+
+	void SceneManager::UseLight(Light* light)
+	{
+		activeLight = light;
+	}
+
+	void SceneManager::DeleteLight(Light* light)
+	{
+		for (int i = 0; i < lights.size(); i++)
+		{
+			if (light == lights[i])
+			{
+				lights.erase(lights.begin() + i);
+			}
+		}
+	}
 }
+

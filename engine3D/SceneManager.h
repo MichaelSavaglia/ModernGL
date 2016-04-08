@@ -17,6 +17,8 @@
 #include "ImageLoader.h"
 #include "tiny_obj_loader.h"
 #include "Camera.h"
+#include "Light.h"
+#include "imgui\imgui.h"
 
 
 namespace Manager
@@ -34,6 +36,11 @@ namespace Manager
 		GLuint* LoadTexture(const char* path);
 
 		Objects* CreateObj(ObjPack* objData, GLuint* texID, glm::vec3 pos);
+
+		Light* CreateLight(glm::vec3 pos, glm::vec3, float power);
+		void AddLight(Light* light);
+		void UseLight(Light* light);
+		void DeleteLight(Light* light);
 
 		void AddItemToRenderer(Objects* obj);
 		void RemoveItemFromRenderer(Objects* obj);
@@ -59,8 +66,13 @@ namespace Manager
 		GLuint TextureID;
 		GLuint LightID;
 		GLuint LightColourID;
+		GLuint LightPowerID;
 
 		glm::vec3 lightColor = glm::vec3(1, 1, 1);
+
+		Light* activeLight;
+
+		std::vector<Light*>lights;
 
 		std::vector<Objects*>objects;
 		std::vector<ObjPack*> objData;

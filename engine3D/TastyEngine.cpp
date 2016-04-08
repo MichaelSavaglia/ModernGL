@@ -29,7 +29,7 @@ bool TastyEngine::Init()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
-	window = glfwCreateWindow(1024, 768, "Pretty Triangle v2.0", NULL, NULL);
+	window = glfwCreateWindow(1280, 720, "Pretty Triangle v2.0", NULL, NULL);
 	if (window == NULL)
 	{
 		fprintf(stderr, "Failed to open GLFW window.\n");
@@ -56,6 +56,8 @@ bool TastyEngine::Init()
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+
+	ImGui_ImplGlfwGL3_Init(window, true);
 
 	return true;
 }
@@ -90,21 +92,35 @@ void TastyEngine::LoadObjects()
 	manager->AddItemToRenderer(cube);
 	manager->AddItemToRenderer(marsObj);
 
+	
 }
 
 void TastyEngine::StartLoop()
 {
+	ImVec4 clear_color = ImColor(114, 144, 154);
 	do{
 		
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
 		manager->Update();
-		manager->Render();
+
+		ImGui_ImplGlfwGL3_NewFrame();
+	
+	
+
+		/*ImGui::Begin("Monkey");
+		static float f = 0.0f;
+		ImGui::Text("Test");
+		ImGui::SliderFloat("Rotation", &monkeyRot, 0.0f, 360.0f);
+		ImGui::ColorEdit3("clear color", (float*)&clear_color);
+		ImGui::End();*/
+
 
 		marsObj->SetRotate(glm::vec3(0, monkeyRot, 0));
 		firstObj->SetRotate(glm::vec3(0, monkeyRot, 0));
-		monkeyRot += 0.2;
+		//monkeyRot += 0.2;
 
 		//cube->SetPos(cube->GetPos() + glm::vec3(0.01, 0, 0));
 		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && mouseActive == false && qKeyUp)
@@ -125,9 +141,12 @@ void TastyEngine::StartLoop()
 			qKeyUp = true;
 		}
 
+
+		manager->Render();
+		ImGui::Render();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-
+		
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 		glfwWindowShouldClose(window) == 0);
 

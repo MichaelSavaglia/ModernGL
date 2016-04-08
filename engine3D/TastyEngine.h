@@ -19,6 +19,10 @@
 #include "ImageLoader.h"
 #include "vboIndexer.h"
 #include "SceneManager.h"
+#include "Light.h"
+#include "imgui\imgui.h"
+#include "imgui\imgui_impl_glfw_gl3.h"
+
 
 
 using namespace glm;
