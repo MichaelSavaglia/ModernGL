@@ -41,6 +41,7 @@ public:
 private:
 	GLFWwindow* window;
 	GLuint programID;
+	GLuint pickingID;
 
 	GLuint VertexArrayID;
 

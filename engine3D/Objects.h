@@ -28,7 +28,8 @@ public:
 
 	ObjPack* GetObjData(){ return objData; }
 	GLuint* GetTextureID(){ return textureID; }
-	const char* GetID(){ return ID; }
+	int GetID(){ return ID; }
+	void SetID(int ID){ this->ID = ID; }
 	glm::vec3 GetPos(){ return pos; }
 	void SetPos(glm::vec3 nPos){ this->pos = nPos; }
 
@@ -52,7 +53,7 @@ private:
 
 	GLuint* textureID;
 	glm::vec3 pos;
-	const char* ID;
+	int ID;
 
 protected:
 

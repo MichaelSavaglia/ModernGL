@@ -19,7 +19,6 @@ namespace Manager
 
 		activeLight = new Light(glm::vec3(0, 10, 2), glm::vec3(1,1,1), 50);
 
-		//lightColor = glm::vec3(1, 1, 1);
 
 	}
 
@@ -38,6 +37,9 @@ namespace Manager
 
 	void SceneManager::Render()
 	{
+		
+
+
 		glm::vec3* tempLightColor = &activeLight->GetColor();
 		float tempLightPower = activeLight->GetPower();
 		glm::vec3* tempLightPos = &activeLight->GetPos();
@@ -249,6 +251,91 @@ namespace Manager
 			if (light == lights[i])
 			{
 				lights.erase(lights.begin() + i);
+			}
+		}
+	}
+
+	Objects* SceneManager::ClickObject(GLuint programID2)
+	{
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glUseProgram(programID2);
+
+		glEnableVertexAttribArray(0);
+
+		for (int i = 0; i < objects.size(); i++)
+		{
+			if (objects[i]->GetID() != 0)
+			{
+				int ID = objects[i]->GetID();
+
+				ModelMatrix = glm::mat4(1.0f);
+
+				ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
+
+				if (objects[i]->GetRot() == true)
+				{
+					orientation = *objects[i]->GetRotVals();
+					glm::mat4 rotationMatrix = eulerAngleYXZ(orientation.y, orientation.x, orientation.z);
+					ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
+					ModelMatrix *= rotationMatrix;
+				}
+
+
+				glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+				glUniformMatrix4fv(programID2, 1, GL_FALSE, &MVP[0][0]);
+				 
+				int r = (ID & 0x000000FF) >> 0;
+				int g = (ID & 0x0000FF00) >> 8;
+				int b = (ID & 0x00FF0000) >> 16;
+
+				glUniform4f(programID2, r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
+
+
+				ObjPack* tempObj = objects[i]->GetObjData();
+
+				
+				glBindBuffer(GL_ARRAY_BUFFER, tempObj->vertexBuffer);
+				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tempObj->elementBuffer);
+
+				glDrawElements(GL_TRIANGLES, tempObj->indicesSize, GL_UNSIGNED_INT, 0);
+				
+				
+			}
+		}
+
+		glDisableVertexAttribArray(0);
+
+		glFlush();
+		glFinish();
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		unsigned char data[4];
+		double width, height;
+
+		glfwGetCursorPos(window, &width, &height);
+
+		glReadPixels(width, height, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+		int pickedID =
+			data[0] +
+			data[1] * 256 +
+			data[2] * 256 * 256;
+
+		if (pickedID == 0x00ffffff)
+			return false;
+		else
+		{
+			for (int i = 0; i < objects.size(); i++)
+			{
+				if (pickedID == objects[i]->GetID())
+				{
+					return objects[i];
+				}
 			}
 		}
 	}

@@ -70,6 +70,7 @@ void TastyEngine::LoadObjects()
 
 
 	programID = loaders::LoadShaders("VertexShader.glsl", "FragmentShader.glsl");
+	pickingID = loaders::LoadShaders("PickVertex.glsl", "PickFrag.glsl");
 
 	glUseProgram(programID);
 	
@@ -91,6 +92,8 @@ void TastyEngine::LoadObjects()
 	manager->AddItemToRenderer(firstObj);
 	manager->AddItemToRenderer(cube);
 	manager->AddItemToRenderer(marsObj);
+	firstObj->SetID(2);
+	marsObj->SetID(1);
 
 	
 }
@@ -110,19 +113,13 @@ void TastyEngine::StartLoop()
 	
 	
 
-		/*ImGui::Begin("Monkey");
-		static float f = 0.0f;
-		ImGui::Text("Test");
-		ImGui::SliderFloat("Rotation", &monkeyRot, 0.0f, 360.0f);
-		ImGui::ColorEdit3("clear color", (float*)&clear_color);
-		ImGui::End();*/
 
 
 		marsObj->SetRotate(glm::vec3(0, monkeyRot, 0));
 		firstObj->SetRotate(glm::vec3(0, monkeyRot, 0));
-		//monkeyRot += 0.2;
+		monkeyRot += 0.2;
 
-		//cube->SetPos(cube->GetPos() + glm::vec3(0.01, 0, 0));
+		
 		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && mouseActive == false && qKeyUp)
 		{
 			qKeyUp = false;
@@ -141,6 +138,18 @@ void TastyEngine::StartLoop()
 			qKeyUp = true;
 		}
 
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) && mouseActive == false)
+		{
+			Objects* temp = manager->ClickObject(pickingID);
+			if (temp != nullptr)
+				temp->SetRotate(glm::vec3(90, 90, 90));
+		}
+
+		glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glUseProgram(programID);
 
 		manager->Render();
 		ImGui::Render();

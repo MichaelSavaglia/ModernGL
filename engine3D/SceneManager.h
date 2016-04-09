@@ -47,6 +47,8 @@ namespace Manager
 		void ShowMouse();
 		void HideMouse();
 
+		Objects* ClickObject(GLuint programID2);
+
 	private:
 		vec3 orientation = vec3(0, 0, 0);
 
@@ -67,8 +69,6 @@ namespace Manager
 		GLuint LightID;
 		GLuint LightColourID;
 		GLuint LightPowerID;
-
-		glm::vec3 lightColor = glm::vec3(1, 1, 1);
 
 		Light* activeLight;
 
