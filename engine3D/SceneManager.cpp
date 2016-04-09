@@ -261,6 +261,9 @@ namespace Manager
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(programID2);
 
+		pickingColorID = glGetUniformLocation(programID2, "PickingColor");
+		pickingMatrixID = glGetUniformLocation(programID2, "MVP");
+
 		glEnableVertexAttribArray(0);
 
 		for (int i = 0; i < objects.size(); i++)
@@ -284,13 +287,13 @@ namespace Manager
 
 				glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
-				glUniformMatrix4fv(programID2, 1, GL_FALSE, &MVP[0][0]);
+				glUniformMatrix4fv(pickingMatrixID, 1, GL_FALSE, &MVP[0][0]);
 				 
 				int r = (ID & 0x000000FF) >> 0;
 				int g = (ID & 0x0000FF00) >> 8;
 				int b = (ID & 0x00FF0000) >> 16;
 
-				glUniform4f(programID2, r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
+				glUniform4f(pickingColorID, r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
 
 
 				ObjPack* tempObj = objects[i]->GetObjData();

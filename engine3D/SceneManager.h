@@ -70,6 +70,9 @@ namespace Manager
 		GLuint LightColourID;
 		GLuint LightPowerID;
 
+		GLuint pickingColorID;
+		GLuint pickingMatrixID;
+
 		Light* activeLight;
 
 		std::vector<Light*>lights;
