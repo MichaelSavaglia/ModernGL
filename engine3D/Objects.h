@@ -33,6 +33,12 @@ public:
 	glm::vec3 GetPos(){ return pos; }
 	void SetPos(glm::vec3 nPos){ this->pos = nPos; }
 
+	glm::vec3 GetSpecular(){ return specularColor; }
+	void SetSpecular(glm::vec3 newSpec){ specularColor = newSpec; }
+
+	glm::vec3 GetAmbient(){ return ambientColor; }
+	void SetAmbient(glm::vec3 newAmbi){ ambientColor = newAmbi; }
+
 	void SetParent(Objects* parent);
 	void AddChild(Objects* child);
 
@@ -55,7 +61,9 @@ private:
 	glm::vec3 pos;
 	int ID;
 
-protected:
+	glm::vec3 ambientColor;
+	glm::vec3 specularColor;
+
 
 };
 

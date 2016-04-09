@@ -70,6 +70,9 @@ namespace Manager
 		GLuint LightColourID;
 		GLuint LightPowerID;
 
+		GLuint AmbientColorID;
+		GLuint SpecularColorID;
+
 		GLuint pickingColorID;
 		GLuint pickingMatrixID;
 

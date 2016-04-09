@@ -60,6 +60,8 @@ private:
 
 	Objects* cube;
 	Objects* marsObj;
+
+	Objects* selectedObject;
 	
 
 

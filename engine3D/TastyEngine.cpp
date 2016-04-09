@@ -59,6 +59,7 @@ bool TastyEngine::Init()
 
 	ImGui_ImplGlfwGL3_Init(window, true);
 
+
 	return true;
 }
 
@@ -95,7 +96,7 @@ void TastyEngine::LoadObjects()
 	firstObj->SetID(2);
 	marsObj->SetID(1);
 
-	
+	selectedObject = nullptr;
 }
 
 void TastyEngine::StartLoop()
@@ -112,7 +113,37 @@ void TastyEngine::StartLoop()
 		ImGui_ImplGlfwGL3_NewFrame();
 	
 	
+		if (selectedObject != nullptr)
+		{
+			glm::vec3 tempPos = selectedObject->GetPos();
+			glm::vec3 tempAmbient = selectedObject->GetAmbient();
+			glm::vec3 tempSpecular = selectedObject->GetSpecular();
+			ImGui::Begin("Selected object data");
+			ImGui::SetWindowSize(ImVec2(300, 400));
+			if (ImGui::CollapsingHeader("Object Position"))
+			{
+				ImGui::SliderFloat("X", &tempPos.x, -5.0f, 5.0f);
+				ImGui::SliderFloat("Y", &tempPos.y, -5.0f, 5.0f);
+				ImGui::SliderFloat("Z", &tempPos.z, -5.0f, 5.0f);
+			}
+			if (ImGui::CollapsingHeader("Object Ambient"))
+			{
+				ImGui::SliderFloat("R", &tempAmbient.x, 0.0f, 1.0f);
+				ImGui::SliderFloat("G", &tempAmbient.y, 0.0f, 1.0f);
+				ImGui::SliderFloat("B", &tempAmbient.z, 0.0f, 1.0f);
+			}
+			if (ImGui::CollapsingHeader("Object Specular"))
+			{
+				ImGui::SliderFloat("R", &tempSpecular.x, 0.0f, 1.0f);
+				ImGui::SliderFloat("G", &tempSpecular.y, 0.0f, 1.0f);
+				ImGui::SliderFloat("B", &tempSpecular.z, 0.0f, 1.0f);
+			}
+			ImGui::End();
 
+			selectedObject->SetPos(tempPos);
+			selectedObject->SetAmbient(tempAmbient);
+			selectedObject->SetSpecular(tempSpecular);
+		}
 
 
 		marsObj->SetRotate(glm::vec3(0, monkeyRot, 0));
@@ -140,9 +171,7 @@ void TastyEngine::StartLoop()
 
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) && mouseActive == false)
 		{
-			Objects* temp = manager->ClickObject(pickingID);
-			if (temp != nullptr)
-				temp->SetRotate(glm::vec3(90, 90, 90));
+			selectedObject = manager->ClickObject(pickingID);
 		}
 
 		glClearColor(0.0f, 0.0f, 0.4f, 0.0f);

@@ -14,12 +14,14 @@ uniform vec3 LightPosition_worldspace;
 uniform vec3 LightColor;
 uniform float LightPower;
 
+uniform vec3 MaterialAmbientColorIn;
+uniform vec3 MaterialSpecularColor;
+
 void main()
 {
 
 	vec3 MaterialDiffuseColor = texture( myTextureSampler, UV ).rgb;
-	vec3 MaterialAmbientColor = vec3(0.1,0.1,0.1) * MaterialDiffuseColor;
-	vec3 MaterialSpecularColor = vec3(0.1,0.1,0.1);
+	vec3 MaterialAmbientColor = MaterialAmbientColorIn * MaterialDiffuseColor;
 
 	float distance = length( LightPosition_worldspace - Position_worldspace );
 

@@ -17,6 +17,9 @@ namespace Manager
 		LightColourID = glGetUniformLocation(programID, "LightColor");
 		LightPowerID = glGetUniformLocation(programID, "LightPower");
 
+		AmbientColorID = glGetUniformLocation(programID, "MaterialAmbientColorIn");
+		SpecularColorID = glGetUniformLocation(programID, "MaterialSpecularColor");
+
 		activeLight = new Light(glm::vec3(0, 10, 2), glm::vec3(1,1,1), 50);
 
 
@@ -110,6 +113,12 @@ namespace Manager
 			glUniform3f(LightColourID, tempLightColor->x, tempLightColor->y, tempLightColor->z);
 			glUniform1f(LightPowerID, tempLightPower);
 			glUniform3f(LightID, tempLightPos->x, tempLightPos->y, tempLightPos->z);
+
+			glm::vec3 tempAmbient = objects[i]->GetAmbient();
+			glUniform3f(AmbientColorID, tempAmbient.x, tempAmbient.y, tempAmbient.z);
+			glm::vec3 tempSpecular = objects[i]->GetSpecular();
+			glUniform3f(SpecularColorID, tempSpecular.x, tempSpecular.y, tempSpecular.z);
+
 
 			glUniform1i(TextureID, 0);
 
@@ -341,6 +350,8 @@ namespace Manager
 				}
 			}
 		}
+
+		
 	}
 }
 
