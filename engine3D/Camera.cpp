@@ -13,7 +13,7 @@ glm::mat4 getProjectionMatrix(){
 	return ProjectionMatrix;
 }
 
-glm::vec3 position = glm::vec3(0, 3, 5);
+glm::vec3 position = glm::vec3(0, 6.8, 5);
 
 float horizontalAngle = 3.141f;
 
@@ -21,7 +21,7 @@ float verticalAngle = 0.0f;
 
 float initialFoV = 45.0f;
 
-float speed = 3.0f;
+float speed = 4.0f;
 float mouseSpeed = 0.05f;
 
 
@@ -44,6 +44,10 @@ void computeMatricesFromInputs(GLFWwindow* window, bool active)
 	
 		horizontalAngle += mouseSpeed * deltaTime * float(width / 2 - xpos);
 		verticalAngle += mouseSpeed * deltaTime * float(height / 2 - ypos);
+		if (verticalAngle < -1.2)
+			verticalAngle = -1.2;
+		if (verticalAngle > 1.2)
+			verticalAngle = 1.2;
 	}
 
 	glm::vec3 direction(
@@ -59,17 +63,18 @@ void computeMatricesFromInputs(GLFWwindow* window, bool active)
 	glm::vec3 up = glm::cross(right, direction);
 	
 
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		position += direction * deltaTime * speed;
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		position -= direction * deltaTime * speed;
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		position -= right * deltaTime * speed;
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		position += right * deltaTime * speed;
 
 	ProjectionMatrix	= glm::perspective(initialFoV, 4.0f / 3.0f, 0.1f, 100.0f);
 
+	position.y = 6.8;
 	ViewMatrix = glm::lookAt(
 		position,
 		position + direction,

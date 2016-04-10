@@ -20,7 +20,7 @@ namespace Manager
 		AmbientColorID = glGetUniformLocation(programID, "MaterialAmbientColorIn");
 		SpecularColorID = glGetUniformLocation(programID, "MaterialSpecularColor");
 
-		activeLight = new Light(glm::vec3(0, 10, 2), glm::vec3(1,1,1), 50);
+		activeLight = new Light(glm::vec3(0, 9.5, 1.2), glm::vec3(1,1,1), 30);
 
 
 	}
@@ -47,36 +47,36 @@ namespace Manager
 		float tempLightPower = activeLight->GetPower();
 		glm::vec3* tempLightPos = &activeLight->GetPos();
 
-		ImGui::Begin("Light data");
-		
-		if (ImGui::CollapsingHeader("Light color"))
+		if (ImGui::Begin("Light data"))
 		{
-			ImGui::Text("Modify the rgb values\n" "of the lighting");
-			ImGui::SetWindowSize("Light Color", ImVec2(150, 70));
-			
-			ImGui::SliderFloat("Red", &tempLightColor->x, 0.0f, 1.0f);
-			ImGui::SliderFloat("Green", &tempLightColor->y, 0.0f, 1.0f);
-			ImGui::SliderFloat("Blue", &tempLightColor->z, 0.0f, 1.0f);
-		}
-		if (ImGui::CollapsingHeader("Light position"))
-		{
-			ImGui::Text("Modify the rgb values\n" "of the lighting");
+			if (ImGui::CollapsingHeader("Light color"))
+			{
+				ImGui::Text("Modify the rgb values\n" "of the lighting");
+				ImGui::SetWindowSize("Light Color", ImVec2(150, 70));
 
-			ImGui::SliderFloat("x", &tempLightPos->x, -5.0f, 5.0f);
-			ImGui::SliderFloat("y", &tempLightPos->y, -5.0f, 10.0f);
-			ImGui::SliderFloat("z", &tempLightPos->z, -5.0f, 5.0f);
-		}
-		if (ImGui::CollapsingHeader("Light intensity"))
-		{
-			ImGui::SliderFloat("Intensity", &tempLightPower, 0.0f, 100.0f);
-		}
+				ImGui::SliderFloat("Red", &tempLightColor->x, 0.0f, 1.0f);
+				ImGui::SliderFloat("Green", &tempLightColor->y, 0.0f, 1.0f);
+				ImGui::SliderFloat("Blue", &tempLightColor->z, 0.0f, 1.0f);
+			}
+			if (ImGui::CollapsingHeader("Light position"))
+			{
+				ImGui::Text("Modify the rgb values\n" "of the lighting");
 
-		activeLight->SetColor(*tempLightColor);
-		activeLight->SetPos(*tempLightPos);
-		activeLight->SetPower(tempLightPower);
-		
-		ImGui::End();
+				ImGui::SliderFloat("x", &tempLightPos->x, -5.0f, 5.0f);
+				ImGui::SliderFloat("y", &tempLightPos->y, -5.0f, 10.0f);
+				ImGui::SliderFloat("z", &tempLightPos->z, -5.0f, 5.0f);
+			}
+			if (ImGui::CollapsingHeader("Light intensity"))
+			{
+				ImGui::SliderFloat("Intensity", &tempLightPower, 0.0f, 100.0f);
+			}
 
+			activeLight->SetColor(*tempLightColor);
+			activeLight->SetPos(*tempLightPos);
+			activeLight->SetPower(tempLightPower);
+
+			ImGui::End();
+		}
 
 		for (int i = 0; i < objects.size(); i++)
 		{

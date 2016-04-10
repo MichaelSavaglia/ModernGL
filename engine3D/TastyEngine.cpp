@@ -81,13 +81,26 @@ void TastyEngine::LoadObjects()
 	suzanne = manager->LoadObjFile("suzanne.obj");
 	mars = manager->LoadObjFile("mars.obj");
 
+
+	floorObj = manager->LoadObjFile("floor.obj");
+	floorTexID = manager->LoadTexture("woodFloor.jpg");
+	floor = manager->CreateObj(floorObj, floorTexID, glm::vec3(0, 0, 0.18));
+	manager->AddItemToRenderer(floor);
+
+	//platformObj = manager->LoadObjFile("platform.obj");
+	platformTexID = manager->LoadTexture("platformtex.jpg");
+	wallPaper = manager->LoadTexture("plaster.jpg");
+	platform = manager->CreateObj(floorObj, wallPaper, glm::vec3(0, 15, 0));
+	manager->AddItemToRenderer(platform);
+	
+
 	uvmapID = manager->LoadTexture("uvmap.bmp");
-	wallPaper = manager->LoadTexture("wallpaper.jpg");
+
 	marsTex = manager->LoadTexture("Mars.bmp");
 
-	firstObj = manager->CreateObj(suzanne, uvmapID, glm::vec3(0, 2, 0));
-	cube = manager->CreateObj(cubeObj, wallPaper, glm::vec3(0, 0, 0));
-	marsObj = manager->CreateObj(mars, marsTex, glm::vec3(2, 2, 0));
+	firstObj = manager->CreateObj(suzanne, uvmapID, glm::vec3(-2.1, 3, 0));
+	cube = manager->CreateObj(cubeObj, platformTexID, glm::vec3(0, 0, 0));
+	marsObj = manager->CreateObj(mars, marsTex, glm::vec3(0.01, 3, 0));
 	
 	cube->SetRotate(glm::vec3(0, 90, 0));
 	manager->AddItemToRenderer(firstObj);

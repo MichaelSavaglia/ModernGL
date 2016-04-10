@@ -50,6 +50,16 @@ private:
 	ObjPack* cubeObj;
 	ObjPack* suzanne;
 	ObjPack* mars;
+
+	ObjPack* floorObj;
+	GLuint* floorTexID;
+	Objects* floor;
+
+	ObjPack* platformObj;
+	GLuint* platformTexID;
+	Objects* platform;
+
+
 	GLuint* uvmapID;
 	GLuint* wallPaper;
 	GLuint* marsTex;
