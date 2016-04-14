@@ -4,7 +4,8 @@
 Objects::Objects(ObjPack* objData, GLuint* texID, glm::vec3 pos)
 {
 	this->objData = objData;
-	this->textureID = texID;
+	textures.push_back(texID);
+	this->activeTextureID = texID;
 	this->pos = pos;
 	ambientColor = glm::vec3(0.1, 0.1, 0.1);
 	specularColor = glm::vec3(0.1, 0.1, 0.1);

@@ -27,7 +27,14 @@ public:
 
 
 	ObjPack* GetObjData(){ return objData; }
-	GLuint* GetTextureID(){ return textureID; }
+
+
+	GLuint* GetActiveTextureID(){ return activeTextureID; }
+	void SetActiveTexture(int index){ activeTextureID = textures[index - 1]; }
+
+	void AddTexture(GLuint* textureID){ textures.push_back(textureID); }
+	int CheckNumTextures(){ return textures.size(); }
+
 	int GetID(){ return ID; }
 	void SetID(int ID){ this->ID = ID; }
 	glm::vec3 GetPos(){ return pos; }
@@ -57,7 +64,9 @@ private:
 	Objects* parent;
 	std::vector<Objects*> children;
 
-	GLuint* textureID;
+	GLuint* activeTextureID;
+	std::vector<GLuint*> textures;
+
 	glm::vec3 pos;
 	int ID;
 

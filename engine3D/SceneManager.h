@@ -19,6 +19,7 @@
 #include "Camera.h"
 #include "Light.h"
 #include "imgui\imgui.h"
+#include "LoadShader.h"
 
 
 namespace Manager
@@ -48,8 +49,13 @@ namespace Manager
 		void HideMouse();
 
 		Objects* ClickObject(GLuint programID2);
+		void TestCel(GLuint programID1, GLuint programID2);
+
+		
 
 	private:
+		int width, height;
+		
 		vec3 orientation = vec3(0, 0, 0);
 
 		void AddObj(Objects* obj);
@@ -75,6 +81,28 @@ namespace Manager
 
 		GLuint pickingColorID;
 		GLuint pickingMatrixID;
+
+		/* Render to texture */
+		bool InitRenderTexture();
+
+		GLuint frameBufferName;
+
+		GLuint renderedTexture;
+
+		GLuint depthRenderBuffer;
+
+		GLenum drawBuffers[1];
+
+		GLuint quad_vertexBuffer;
+
+		GLuint quadProgamID;
+		GLuint texID;
+		GLuint timeID;
+		/* Render to texture */
+
+		GLuint matrixID;
+		GLuint colorID;
+		GLuint offsetID;
 
 		Light* activeLight;
 

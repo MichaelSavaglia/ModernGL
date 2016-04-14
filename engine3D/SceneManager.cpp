@@ -21,7 +21,9 @@ namespace Manager
 		SpecularColorID = glGetUniformLocation(programID, "MaterialSpecularColor");
 
 		activeLight = new Light(glm::vec3(0, 9.5, 1.2), glm::vec3(1,1,1), 30);
-
+		this->programID = programID;
+		glfwGetWindowSize(window, &width, &height);
+		InitRenderTexture();
 
 	}
 
@@ -40,19 +42,25 @@ namespace Manager
 
 	void SceneManager::Render()
 	{
-		
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferName);
+		glViewport(0, 0, width, height);
 
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glUseProgram(programID);
+
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_CCW);
+		glDepthMask(GL_TRUE);
 
 		glm::vec3* tempLightColor = &activeLight->GetColor();
 		float tempLightPower = activeLight->GetPower();
 		glm::vec3* tempLightPos = &activeLight->GetPos();
 
-		if (ImGui::Begin("Light data"))
+		ImGui::Begin("Light data");
 		{
 			if (ImGui::CollapsingHeader("Light color"))
 			{
 				ImGui::Text("Modify the rgb values\n" "of the lighting");
-				ImGui::SetWindowSize("Light Color", ImVec2(150, 70));
 
 				ImGui::SliderFloat("Red", &tempLightColor->x, 0.0f, 1.0f);
 				ImGui::SliderFloat("Green", &tempLightColor->y, 0.0f, 1.0f);
@@ -68,6 +76,7 @@ namespace Manager
 			}
 			if (ImGui::CollapsingHeader("Light intensity"))
 			{
+				ImGui::Text("Modify the inensity\n" "of the lighting");
 				ImGui::SliderFloat("Intensity", &tempLightPower, 0.0f, 100.0f);
 			}
 
@@ -80,26 +89,22 @@ namespace Manager
 
 		for (int i = 0; i < objects.size(); i++)
 		{
-			/*glm::quat MyQuaternion;
-			glm::vec3 EulerAngles(90, 45, 0);
-			MyQuaternion = glm::quat(EulerAngles);
-			MyQuaternion =*/
+			
 			
 			ModelMatrix = glm::mat4(1.0f);
 
 			ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
-			
-			
-			
-				if (objects[i]->GetRot() == true)
-				{
-					orientation = *objects[i]->GetRotVals();
-					glm::mat4 rotationMatrix = eulerAngleYXZ(orientation.y, orientation.x, orientation.z);
-					ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
-					ModelMatrix *= rotationMatrix;
-				}
-			
-			
+
+
+
+			if (objects[i]->GetRot() == true)
+			{
+				orientation = *objects[i]->GetRotVals();
+				glm::mat4 rotationMatrix = eulerAngleYXZ(orientation.y, orientation.x, orientation.z);
+				ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
+				ModelMatrix *= rotationMatrix;
+			}
+
 			glm::mat4 mvp = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
 			ObjPack* tempObj = objects[i]->GetObjData();
@@ -108,7 +113,7 @@ namespace Manager
 			glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
 			glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
 
-			glBindTexture(GL_TEXTURE_2D, *objects[i]->GetTextureID());
+			glBindTexture(GL_TEXTURE_2D, *objects[i]->GetActiveTextureID());
 
 			glUniform3f(LightColourID, tempLightColor->x, tempLightColor->y, tempLightColor->z);
 			glUniform1f(LightPowerID, tempLightPower);
@@ -135,14 +140,37 @@ namespace Manager
 			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tempObj->elementBuffer);
-			
+
 
 			glDrawElements(GL_TRIANGLES, tempObj->indicesSize, GL_UNSIGNED_INT, 0);
 
 			glDisableVertexAttribArray(0);
 			glDisableVertexAttribArray(1);
 			glDisableVertexAttribArray(2);
+			
 		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glViewport(0, 0, width, height);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glUseProgram(quadProgamID);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, renderedTexture);
+
+		glUniform1i(texID, 0);
+		glUniform1f(timeID, (float)(glfwGetTime()*10.0f));
+
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, quad_vertexBuffer);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		glDisableVertexAttribArray(0);
 	}
 
 	ObjPack* SceneManager::LoadObjFile(const char* path)
@@ -266,9 +294,10 @@ namespace Manager
 
 	Objects* SceneManager::ClickObject(GLuint programID2)
 	{
+		glUseProgram(programID2);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glUseProgram(programID2);
+		
 
 		pickingColorID = glGetUniformLocation(programID2, "PickingColor");
 		pickingMatrixID = glGetUniformLocation(programID2, "MVP");
@@ -310,6 +339,7 @@ namespace Manager
 				
 				glBindBuffer(GL_ARRAY_BUFFER, tempObj->vertexBuffer);
 				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+			
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tempObj->elementBuffer);
 
@@ -350,8 +380,121 @@ namespace Manager
 				}
 			}
 		}
+		return false;
+		
+	}
+
+	bool SceneManager::InitRenderTexture()
+	{
+		frameBufferName = 0;
+		glGenFramebuffers(1, &frameBufferName);
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferName);
+
+		glGenTextures(1, &renderedTexture);
+
+		glBindTexture(GL_TEXTURE_2D, renderedTexture);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glGenRenderbuffers(1, &depthRenderBuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, depthRenderBuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderBuffer);
+
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+		drawBuffers[0] = GL_COLOR_ATTACHMENT0;
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			return false;
+
+		const GLfloat g_quad_vertex_buffer_data[] = {
+			-1.0f, -1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+			-1.0f, 1.0f, 0.0f,
+			-1.0f, 1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+			1.0f, 1.0f, 0.0f,
+		};
+
+		glGenBuffers(1, &quad_vertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, quad_vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+
+		quadProgamID = loaders::LoadShaders("PassThroughVert.glsl", "WobblyFrag.glsl");
+		texID = glGetUniformLocation(quadProgamID, "renderedTexture");
+		timeID = glGetUniformLocation(quadProgamID, "time");
+	}
+
+	void SceneManager::TestCel(GLuint programID1, GLuint programID2)
+	{
+
+		glClearColor(0.0f, 0.4f, 0.4f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_CCW);
+		glDepthMask(GL_TRUE);
+		glUseProgram(programID1);
+
+		matrixID = glGetUniformLocation(programID1, "MVP");
+		colorID = glGetUniformLocation(programID1, "u_color1");
+		offsetID = glGetUniformLocation(programID1, "offset");
+
+		ModelMatrix = glm::mat4(1.0f);
+
+		ModelMatrix = glm::translate(ModelMatrix, objects[4]->GetPos());
+
+		if (objects[2]->GetRot() == true)
+		{
+			orientation = *objects[2]->GetRotVals();
+			glm::mat4 rotationMatrix = eulerAngleYXZ(orientation.y, orientation.x, orientation.z);
+			ModelMatrix = glm::translate(ModelMatrix, objects[2]->GetPos());
+			ModelMatrix *= rotationMatrix;
+		}
+
+		glm::mat4 mvp = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+		glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
 
 		
+
+		ObjPack* tempObj = objects[2]->GetObjData();
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, tempObj->vertexBuffer);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+
+
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, tempObj->normalBuffer);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tempObj->elementBuffer);
+
+		
+		/* Chris - look here!*/
+		
+		//glm::vec3 color(0, 0, 0);
+		glm::vec3 color(1, 1, 1);
+		glUniform4f(colorID, color.x, color.y, color.z, 1.0f);
+		glUniform1f(offsetID, 0.65f);
+		glDrawElements(GL_TRIANGLES, tempObj->indicesSize, GL_UNSIGNED_INT, 0);
+
+		glCullFace(GL_CW);
+		glDepthMask(GL_FALSE);
+		//glm::vec3 color2(1, 1, 1);
+		glm::vec3 color2(1, 1, 1);
+		glUniform4f(colorID, color2.x, color2.y, color2.z, 1.0f);
+		glUniform1f(offsetID, 0.0f);
+		glDrawElements(GL_TRIANGLES, tempObj->indicesSize, GL_UNSIGNED_INT, 0);
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
 	}
 }
 

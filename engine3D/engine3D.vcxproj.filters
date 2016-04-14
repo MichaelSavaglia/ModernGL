@@ -150,5 +150,17 @@
     <None Include="PickFrag.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="SilhouetteFrag.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="SilhouetteVertex.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="PassThroughVert.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="WobblyFrag.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

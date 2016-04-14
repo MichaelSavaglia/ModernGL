@@ -72,49 +72,72 @@ void TastyEngine::LoadObjects()
 
 	programID = loaders::LoadShaders("VertexShader.glsl", "FragmentShader.glsl");
 	pickingID = loaders::LoadShaders("PickVertex.glsl", "PickFrag.glsl");
+	silhouetteID = loaders::LoadShaders("SilhouetteVertex.glsl", "SilhouetteFrag.glsl");
 
 	glUseProgram(programID);
 	
 	manager = new Manager::SceneManager(window, programID);
 
-	cubeObj = manager->LoadObjFile("newWalls.obj");
-	suzanne = manager->LoadObjFile("suzanne.obj");
-	mars = manager->LoadObjFile("mars.obj");
+	wallsObj = manager->LoadObjFile("objects/newWalls.obj");
+	suzanne = manager->LoadObjFile("objects/suzanne.obj");
 
 
-	floorObj = manager->LoadObjFile("floor.obj");
-	floorTexID = manager->LoadTexture("woodFloor.jpg");
+
+	floorObj = manager->LoadObjFile("objects/floor.obj");
+	floorTexID = manager->LoadTexture("textures/woodFloor.jpg");
 	floor = manager->CreateObj(floorObj, floorTexID, glm::vec3(0, 0, 0.18));
 	manager->AddItemToRenderer(floor);
 
 	//platformObj = manager->LoadObjFile("platform.obj");
-	platformTexID = manager->LoadTexture("platformtex.jpg");
-	wallPaper = manager->LoadTexture("plaster.jpg");
+	platformTexID = manager->LoadTexture("textures/brickwall.jpg");
+	wallPaper = manager->LoadTexture("textures/plaster.jpg");
 	platform = manager->CreateObj(floorObj, wallPaper, glm::vec3(0, 15, 0));
 	manager->AddItemToRenderer(platform);
 	
 
-	uvmapID = manager->LoadTexture("uvmap.bmp");
+	uvmapID = manager->LoadTexture("textures/uvmap.bmp");
 
-	marsTex = manager->LoadTexture("Mars.bmp");
+	cubeObj = manager->LoadObjFile("objects/cube.obj");
+	cube = manager->CreateObj(cubeObj, uvmapID, glm::vec3(-4, 3, 0));
+	manager->AddItemToRenderer(cube);
+
+	/* Mars and all textures*/
+	marsObj = manager->LoadObjFile("objects/mars.obj");
+	marsTex = manager->LoadTexture("textures/Mars.bmp");
+	mars = manager->CreateObj(marsObj, marsTex, glm::vec3(0.01, 3, 0));
+	manager->AddItemToRenderer(mars);
+	mars->SetID(1);
+	GLuint* europa = manager->LoadTexture("textures/europaColor.png");
+	GLuint* mercury = manager->LoadTexture("textures/mercuryColor.png");
+	GLuint* uranus = manager->LoadTexture("textures/uranusColor.png");
+	mars->AddTexture(europa);
+	mars->AddTexture(mercury);
+	mars->AddTexture(uranus);
+	/* Mars and all textures*/
+
+
 
 	firstObj = manager->CreateObj(suzanne, uvmapID, glm::vec3(-2.1, 3, 0));
-	cube = manager->CreateObj(cubeObj, platformTexID, glm::vec3(0, 0, 0));
-	marsObj = manager->CreateObj(mars, marsTex, glm::vec3(0.01, 3, 0));
+	walls = manager->CreateObj(wallsObj, platformTexID, glm::vec3(0, 0, 0));
+
 	
-	cube->SetRotate(glm::vec3(0, 90, 0));
+	firstObj->AddTexture(europa);
+
+
+	walls->SetRotate(glm::vec3(0, 90, 0));
 	manager->AddItemToRenderer(firstObj);
-	manager->AddItemToRenderer(cube);
-	manager->AddItemToRenderer(marsObj);
+	manager->AddItemToRenderer(walls);
+	
+
+	
 	firstObj->SetID(2);
-	marsObj->SetID(1);
+	cube->SetID(3);
 
 	selectedObject = nullptr;
 }
 
 void TastyEngine::StartLoop()
 {
-	ImVec4 clear_color = ImColor(114, 144, 154);
 	do{
 		
 
@@ -124,7 +147,18 @@ void TastyEngine::StartLoop()
 		manager->Update();
 
 		ImGui_ImplGlfwGL3_NewFrame();
-	
+
+
+		double currentTime = glfwGetTime();
+		nbFrames++;
+		if (currentTime - lastTime >= 1.0){ // If last prinf() was more than 1 sec ago
+			// printf and reset timer
+			printf("%f ms/frame\n", 1000.0 / double(nbFrames));
+			nbFrames = 0;
+			lastTime += 1.0;
+		}
+
+		
 	
 		if (selectedObject != nullptr)
 		{
@@ -135,9 +169,9 @@ void TastyEngine::StartLoop()
 			ImGui::SetWindowSize(ImVec2(300, 400));
 			if (ImGui::CollapsingHeader("Object Position"))
 			{
-				ImGui::SliderFloat("X", &tempPos.x, -5.0f, 5.0f);
-				ImGui::SliderFloat("Y", &tempPos.y, -5.0f, 5.0f);
-				ImGui::SliderFloat("Z", &tempPos.z, -5.0f, 5.0f);
+				ImGui::SliderFloat("X", &tempPos.x, -4.0f, 4.0f);
+				ImGui::SliderFloat("Y", &tempPos.y, 1.0f, 6.0f);
+				ImGui::SliderFloat("Z", &tempPos.z, -2.5f, 2.5f);
 			}
 			if (ImGui::CollapsingHeader("Object Ambient"))
 			{
@@ -147,9 +181,19 @@ void TastyEngine::StartLoop()
 			}
 			if (ImGui::CollapsingHeader("Object Specular"))
 			{
-				ImGui::SliderFloat("R", &tempSpecular.x, 0.0f, 1.0f);
-				ImGui::SliderFloat("G", &tempSpecular.y, 0.0f, 1.0f);
-				ImGui::SliderFloat("B", &tempSpecular.z, 0.0f, 1.0f);
+				ImGui::SliderFloat("RED", &tempSpecular.x, 0.0f, 1.0f);
+				ImGui::SliderFloat("GREEN", &tempSpecular.y, 0.0f, 1.0f);
+				ImGui::SliderFloat("BLUE", &tempSpecular.z, 0.0f, 1.0f);
+			}
+			if (ImGui::CollapsingHeader("Object Textures"))
+			{
+				for (int i = 0; i < selectedObject->CheckNumTextures(); i++)
+				{
+					std::string textureNum = "Texture ";
+					textureNum += std::to_string(i + 1);
+					
+					if (ImGui::Button(textureNum.c_str())) selectedObject->SetActiveTexture(i + 1);
+				}
 			}
 			ImGui::End();
 
@@ -159,41 +203,20 @@ void TastyEngine::StartLoop()
 		}
 
 
-		marsObj->SetRotate(glm::vec3(0, monkeyRot, 0));
+		mars->SetRotate(glm::vec3(0, monkeyRot, 0));
 		firstObj->SetRotate(glm::vec3(0, monkeyRot, 0));
 		monkeyRot += 0.2;
 
 		
-		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && mouseActive == false && qKeyUp)
-		{
-			qKeyUp = false;
-			manager->ShowMouse();
-			mouseActive = true;
-		}
-		else if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && mouseActive == true && qKeyUp)
-		{
-			qKeyUp = false;
-			manager->HideMouse();
-			mouseActive = false;
+		InputHandling();
 
-		}
-		else if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_RELEASE)
-		{
-			qKeyUp = true;
-		}
-
-		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) && mouseActive == false)
-		{
-			selectedObject = manager->ClickObject(pickingID);
-		}
-
-		glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		glUseProgram(programID);
-
+		
+		
+		//manager->TestCel(silhouetteID, 2);
 		manager->Render();
+		
+		
+		
 		ImGui::Render();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -204,3 +227,30 @@ void TastyEngine::StartLoop()
 
 	glfwTerminate();
 }
+
+void TastyEngine::InputHandling()
+{
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && mouseActive == false && qKeyUp)
+	{
+		qKeyUp = false;
+		manager->ShowMouse();
+		mouseActive = true;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && mouseActive == true && qKeyUp)
+	{
+		qKeyUp = false;
+		manager->HideMouse();
+		mouseActive = false;
+
+	}
+	else if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_RELEASE)
+	{
+		qKeyUp = true;
+	}
+
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) && mouseActive == false)
+	{
+		selectedObject = manager->ClickObject(pickingID);
+	}
+}
+

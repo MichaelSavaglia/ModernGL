@@ -38,18 +38,26 @@ public:
 	void LoadObjects();
 	void StartLoop();
 
+	void InputHandling();
+
+
 private:
 	GLFWwindow* window;
+
 	GLuint programID;
 	GLuint pickingID;
+	GLuint silhouetteID;
 
 	GLuint VertexArrayID;
 
 	Textures::Texture* texture;
 
-	ObjPack* cubeObj;
+	ObjPack* wallsObj;
 	ObjPack* suzanne;
-	ObjPack* mars;
+	ObjPack* marsObj;
+
+	ObjPack* cubeObj;
+	Objects* cube;
 
 	ObjPack* floorObj;
 	GLuint* floorTexID;
@@ -68,10 +76,13 @@ private:
 	float monkeyRot = 0;
 
 
-	Objects* cube;
-	Objects* marsObj;
+	Objects* walls;
+	Objects* mars;
 
 	Objects* selectedObject;
+
+	int lastTime;
+	int nbFrames;
 	
 
 
