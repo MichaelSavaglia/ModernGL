@@ -9,6 +9,8 @@ Objects::Objects(ObjPack* objData, GLuint* texID, glm::vec3 pos)
 	this->pos = pos;
 	ambientColor = glm::vec3(0.1, 0.1, 0.1);
 	specularColor = glm::vec3(0.1, 0.1, 0.1);
+	rot = glm::vec3(0, 0, 0);
+	scale = glm::vec3(1, 1, 1);
 }
 
 
@@ -35,18 +37,12 @@ void Objects::AddChild(Objects* child)
 
 void Objects::SetRotate(glm::vec3 rot)
 {
-	rotate = true;
 	rot = glm::vec3(glm::radians((float)rot.x), glm::radians((float)rot.y), glm::radians((float)rot.z));
 	this->rot = rot;
 
 }
 
-bool Objects::GetRot()
+glm::vec3 Objects::GetRotVals()
 {
-	return rotate;
-}
-
-glm::vec3* Objects::GetRotVals()
-{
-	return &rot;
+	return rot;
 }

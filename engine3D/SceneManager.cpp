@@ -93,17 +93,16 @@ namespace Manager
 			
 			ModelMatrix = glm::mat4(1.0f);
 
-			ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
 
+			glm::mat4 translationMatrix = glm::translate(objects[i]->GetPos());
 
+			orientation = objects[i]->GetRotVals();
+			glm::mat4 rotationMatrix = eulerAngleYXZ(orientation.y, orientation.x, orientation.z);
 
-			if (objects[i]->GetRot() == true)
-			{
-				orientation = *objects[i]->GetRotVals();
-				glm::mat4 rotationMatrix = eulerAngleYXZ(orientation.y, orientation.x, orientation.z);
-				ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
-				ModelMatrix *= rotationMatrix;
-			}
+			glm::mat4 scaleMatrix = glm::scale(objects[i]->GetScale());
+
+			ModelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
+
 
 			glm::mat4 mvp = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
@@ -312,16 +311,14 @@ namespace Manager
 
 				ModelMatrix = glm::mat4(1.0f);
 
-				ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
+				glm::mat4 translationMatrix = glm::translate(objects[i]->GetPos());
 
-				if (objects[i]->GetRot() == true)
-				{
-					orientation = *objects[i]->GetRotVals();
-					glm::mat4 rotationMatrix = eulerAngleYXZ(orientation.y, orientation.x, orientation.z);
-					ModelMatrix = glm::translate(ModelMatrix, objects[i]->GetPos());
-					ModelMatrix *= rotationMatrix;
-				}
+				orientation = objects[i]->GetRotVals();
+				glm::mat4 rotationMatrix = eulerAngleYXZ(orientation.y, orientation.x, orientation.z);
 
+				glm::mat4 scaleMatrix = glm::scale(objects[i]->GetScale());
+
+				ModelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
 
 				glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
@@ -447,15 +444,15 @@ namespace Manager
 
 		ModelMatrix = glm::mat4(1.0f);
 
+
 		ModelMatrix = glm::translate(ModelMatrix, objects[4]->GetPos());
 
-		if (objects[2]->GetRot() == true)
-		{
-			orientation = *objects[2]->GetRotVals();
-			glm::mat4 rotationMatrix = eulerAngleYXZ(orientation.y, orientation.x, orientation.z);
-			ModelMatrix = glm::translate(ModelMatrix, objects[2]->GetPos());
-			ModelMatrix *= rotationMatrix;
-		}
+		
+		orientation = objects[2]->GetRotVals();
+		glm::mat4 rotationMatrix = eulerAngleYXZ(orientation.y, orientation.x, orientation.z);
+		ModelMatrix = glm::translate(ModelMatrix, objects[2]->GetPos());
+		ModelMatrix *= rotationMatrix;
+		
 
 		glm::mat4 mvp = ProjectionMatrix * ViewMatrix * ModelMatrix;
 

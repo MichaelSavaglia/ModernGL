@@ -79,7 +79,7 @@ void TastyEngine::LoadObjects()
 	manager = new Manager::SceneManager(window, programID);
 
 	wallsObj = manager->LoadObjFile("objects/newWalls.obj");
-	suzanne = manager->LoadObjFile("objects/suzanne.obj");
+
 
 
 
@@ -98,13 +98,13 @@ void TastyEngine::LoadObjects()
 	uvmapID = manager->LoadTexture("textures/uvmap.bmp");
 
 	cubeObj = manager->LoadObjFile("objects/cube.obj");
-	cube = manager->CreateObj(cubeObj, uvmapID, glm::vec3(-4, 3, 0));
+	cube = manager->CreateObj(cubeObj, uvmapID, glm::vec3(-7.2, 4.3, 0));
 	manager->AddItemToRenderer(cube);
 
 	/* Mars and all textures*/
 	marsObj = manager->LoadObjFile("objects/mars.obj");
 	marsTex = manager->LoadTexture("textures/Mars.bmp");
-	mars = manager->CreateObj(marsObj, marsTex, glm::vec3(0.01, 3, 0));
+	mars = manager->CreateObj(marsObj, marsTex, glm::vec3(-0.4, 4.3, 0));
 	manager->AddItemToRenderer(mars);
 	mars->SetID(1);
 	GLuint* europa = manager->LoadTexture("textures/europaColor.png");
@@ -115,9 +115,18 @@ void TastyEngine::LoadObjects()
 	mars->AddTexture(uranus);
 	/* Mars and all textures*/
 
+	spaceShipObj = manager->LoadObjFile("objects/spaceShip.obj");
+	spaceShipTex = manager->LoadTexture("textures/spaceShip.png");
+	spaceShip = manager->CreateObj(spaceShipObj, spaceShipTex, glm::vec3(3, 4.4, 0));
+	spaceShip->SetScale(glm::vec3(0.08, 0.08, 0.08));
+	spaceShip->SetID(10);
+	manager->AddItemToRenderer(spaceShip);
 
 
-	firstObj = manager->CreateObj(suzanne, uvmapID, glm::vec3(-2.1, 3, 0));
+	suzanne = manager->LoadObjFile("objects/suzanne.obj");
+	firstObj = manager->CreateObj(suzanne, uvmapID, glm::vec3(-3.8, 4.3, 0));
+
+
 	walls = manager->CreateObj(wallsObj, platformTexID, glm::vec3(0, 0, 0));
 
 	
@@ -165,13 +174,28 @@ void TastyEngine::StartLoop()
 			glm::vec3 tempPos = selectedObject->GetPos();
 			glm::vec3 tempAmbient = selectedObject->GetAmbient();
 			glm::vec3 tempSpecular = selectedObject->GetSpecular();
+			glm::vec3 tempScale = selectedObject->GetScale();
+			glm::vec3 tempRotation = selectedObject->GetRotVals();
+
 			ImGui::Begin("Selected object data");
 			ImGui::SetWindowSize(ImVec2(300, 400));
 			if (ImGui::CollapsingHeader("Object Position"))
 			{
-				ImGui::SliderFloat("X", &tempPos.x, -4.0f, 4.0f);
-				ImGui::SliderFloat("Y", &tempPos.y, 1.0f, 6.0f);
-				ImGui::SliderFloat("Z", &tempPos.z, -2.5f, 2.5f);
+				ImGui::SliderFloat("X", &tempPos.x, -8.0f, 8.0f);
+				ImGui::SliderFloat("Y", &tempPos.y, 3.0f, 10.0f);
+				ImGui::SliderFloat("Z", &tempPos.z, -4.0f, 4.0f);
+			}
+			if (ImGui::CollapsingHeader("Object Scale"))
+			{
+				ImGui::SliderFloat("x", &tempScale.x, 0.0f, 4.0f);
+				ImGui::SliderFloat("y", &tempScale.y, 0.0f, 4.0f);
+				ImGui::SliderFloat("z", &tempScale.z, 0.0f, 4.0f);
+			}
+			if (ImGui::CollapsingHeader("Object Rotation"))
+			{
+				ImGui::SliderFloat("x", &tempRotation.x, 0.0f, 360.0f);
+				ImGui::SliderFloat("y", &tempRotation.y, 0.0f, 360.0f);
+				ImGui::SliderFloat("z", &tempRotation.z, 0.0f, 360.0f);
 			}
 			if (ImGui::CollapsingHeader("Object Ambient"))
 			{
@@ -200,6 +224,8 @@ void TastyEngine::StartLoop()
 			selectedObject->SetPos(tempPos);
 			selectedObject->SetAmbient(tempAmbient);
 			selectedObject->SetSpecular(tempSpecular);
+			selectedObject->SetScale(tempScale);
+			selectedObject->SetRotate(tempRotation);
 		}
 
 

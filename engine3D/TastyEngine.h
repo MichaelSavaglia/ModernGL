@@ -63,6 +63,12 @@ private:
 	GLuint* floorTexID;
 	Objects* floor;
 
+	ObjPack* spaceShipObj;
+	GLuint* spaceShipTex;
+	Objects* spaceShip;
+
+
+
 	ObjPack* platformObj;
 	GLuint* platformTexID;
 	Objects* platform;

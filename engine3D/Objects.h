@@ -50,15 +50,17 @@ public:
 	void AddChild(Objects* child);
 
 	void SetRotate(glm::vec3 rot);
-	bool GetRot();
-	glm::vec3* GetRotVals();
+	glm::vec3 GetRotVals();
+
+	void SetScale(glm::vec3 scale){ this->scale = scale; }
+	glm::vec3 GetScale(){ return this->scale; }
 
 	//virtual void Update();
 
 private:
+	glm::vec3 scale;
 
 	glm::vec3 rot;
-	bool rotate = false;
 	ObjPack* objData;
 
 	Objects* parent;

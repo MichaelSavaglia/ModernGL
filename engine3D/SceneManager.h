@@ -12,6 +12,8 @@
 #include <gtc\quaternion.hpp>
 #include <gtx\quaternion.hpp>
 #include <gtx/euler_angles.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtx\transform.hpp>
 
 #include "Objects.h"
 #include "ImageLoader.h"
