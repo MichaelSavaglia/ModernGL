@@ -55,6 +55,9 @@ public:
 	void SetScale(glm::vec3 scale){ this->scale = scale; }
 	glm::vec3 GetScale(){ return this->scale; }
 
+	const char* GetName(){ return this->name; }
+	void SetName(const char* name){ this->name = name; }
+
 	//virtual void Update();
 
 private:
@@ -70,7 +73,9 @@ private:
 	std::vector<GLuint*> textures;
 
 	glm::vec3 pos;
+
 	int ID;
+	const char* name;
 
 	glm::vec3 ambientColor;
 	glm::vec3 specularColor;

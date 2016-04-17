@@ -53,6 +53,11 @@ namespace Manager
 		Objects* ClickObject(GLuint programID2);
 		void TestCel(GLuint programID1, GLuint programID2);
 
+		bool AddGamestate(const char* state);
+		bool DeleteGameState(const char* state);
+		bool SetActiveState(const char* state);
+		const char* GetCurrentState();
+
 		
 
 	private:
@@ -116,6 +121,9 @@ namespace Manager
 		std::vector<tinyobj::shape_t> shapes;
 		std::vector<tinyobj::material_t> materials;
 		std::string err;
+
+		std::vector<const char*>gameStates;
+		const char* activeState;
 
 		GLFWwindow* window;
 

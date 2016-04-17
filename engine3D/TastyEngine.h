@@ -65,9 +65,16 @@ private:
 
 	ObjPack* spaceShipObj;
 	GLuint* spaceShipTex;
+	GLuint* spaceShipTex2;
 	Objects* spaceShip;
 
+	ObjPack* spaceShipObj2;
+	GLuint* spaceShip2Tex;
+	Objects* spaceShip2;
 
+
+	void MainGame();
+	void MainMenu();
 
 	ObjPack* platformObj;
 	GLuint* platformTexID;
@@ -92,7 +99,8 @@ private:
 	
 
 
-	bool mouseActive = false;
+	bool mouseActive = false
+		;
 	bool qKeyUp = true;
 
 	std::vector<unsigned short> indices;

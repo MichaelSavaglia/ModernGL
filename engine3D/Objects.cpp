@@ -11,6 +11,7 @@ Objects::Objects(ObjPack* objData, GLuint* texID, glm::vec3 pos)
 	specularColor = glm::vec3(0.1, 0.1, 0.1);
 	rot = glm::vec3(0, 0, 0);
 	scale = glm::vec3(1, 1, 1);
+	name = nullptr;
 }
 
 

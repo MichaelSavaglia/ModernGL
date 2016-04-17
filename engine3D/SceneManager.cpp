@@ -493,5 +493,52 @@ namespace Manager
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 	}
+
+	bool SceneManager::AddGamestate(const char* state)
+	{	 
+		for (int i = 0; i < gameStates.size(); i++)
+		{
+			if (strcmp(gameStates[i], state) == 0)
+			{
+				std::cout << "Error: Gamestate already exists! " << state << std::endl;
+				return false;
+			}
+		}
+		gameStates.push_back(state);
+		return true;
+	}	 
+		 
+	bool SceneManager::DeleteGameState(const char* state)
+	{	 
+		for (int i = 0; i < gameStates.size(); i++)
+		{
+			if (strcmp(gameStates[i], state) == 0)
+			{
+				gameStates.erase(gameStates.begin() + i);
+				return true;
+			}
+		}
+		std::cout << "Error: Gamestate doesn't exists! " << state << std::endl;
+		return false;
+	}	 
+		 
+	bool SceneManager::SetActiveState(const char* state)
+	{
+		for (int i = 0; i < gameStates.size(); i++)
+		{
+			if (strcmp(gameStates[i], state) == 0)
+			{
+				activeState = state;
+				return true;
+			}
+		}
+		std::cout << "Error: Gamestate doesn't exists! " << state << std::endl;
+		return false;
+	}
+
+	const char* SceneManager::GetCurrentState()
+	{
+		return activeState;
+	}
 }
 
