@@ -38,9 +38,8 @@ void Objects::AddChild(Objects* child)
 
 void Objects::SetRotate(glm::vec3 rot)
 {
-	rot = glm::vec3(glm::radians((float)rot.x), glm::radians((float)rot.y), glm::radians((float)rot.z));
-	this->rot = rot;
-
+	glm::vec3 temp = glm::vec3(glm::radians((float)rot.x), glm::radians((float)rot.y), glm::radians((float)rot.z));
+	this->rot = temp;
 }
 
 glm::vec3 Objects::GetRotVals()

@@ -81,8 +81,6 @@ void TastyEngine::LoadObjects()
 	wallsObj = manager->LoadObjFile("objects/newWalls.obj");
 
 
-
-
 	floorObj = manager->LoadObjFile("objects/floor.obj");
 	floorTexID = manager->LoadTexture("textures/woodFloor.jpg");
 	floor = manager->CreateObj(floorObj, floorTexID, glm::vec3(0, 0, 0.18));
@@ -99,16 +97,17 @@ void TastyEngine::LoadObjects()
 
 	uvmapID = manager->LoadTexture("textures/uvmap.bmp");
 
-	cubeObj = manager->LoadObjFile("objects/cube.obj");
+
+	/*cubeObj = manager->LoadObjCustom("objects/cube.obj");
 	cube = manager->CreateObj(cubeObj, uvmapID, glm::vec3(-7.2, 4.3, 0));
 	manager->AddItemToRenderer(cube);
 	cube->SetName("Cube");
-	cube->SetID(3);
+	cube->SetID(3);*/
 
 	/* Mars and all textures */
 	marsObj = manager->LoadObjFile("objects/mars.obj");
 	marsTex = manager->LoadTexture("textures/Mars.bmp");
-	mars = manager->CreateObj(marsObj, marsTex, glm::vec3(-0.4, 4.3, 0));
+	mars = manager->CreateObj(marsObj, marsTex, glm::vec3(-0.8, 7.8, -5));
 	manager->AddItemToRenderer(mars);
 	mars->SetID(1);
 	GLuint* europa = manager->LoadTexture("textures/europaColor.png");
@@ -124,9 +123,10 @@ void TastyEngine::LoadObjects()
 	spaceShipObj = manager->LoadObjFile("objects/spaceShip.obj");
 	spaceShipTex = manager->LoadTexture("textures/spaceShip.png");
 	spaceShipTex2 = manager->LoadTexture("textures/spaceShip2.png");
-	spaceShip = manager->CreateObj(spaceShipObj, spaceShipTex, glm::vec3(3, 4.4, 0));
+	spaceShip = manager->CreateObj(spaceShipObj, spaceShipTex, glm::vec3(3.133, 4.288, -2.674));
 	spaceShip->SetScale(glm::vec3(0.08, 0.08, 0.08));
 	spaceShip->SetID(10);
+	spaceShip->SetRotate(glm::vec3(0, 38, 0));
 	spaceShip->AddTexture(spaceShipTex2);
 	spaceShip->AddTexture(uvmapID);
 	spaceShip->SetName("Space ship");
@@ -136,25 +136,59 @@ void TastyEngine::LoadObjects()
 	/* Second Spaceship */
 	spaceShipObj2 = manager->LoadObjFile("objects/spaceship2.obj");
 	spaceShip2Tex = manager->LoadTexture("textures/spaceship2tex.png");
-	spaceShip2 = manager->CreateObj(spaceShipObj2, spaceShip2Tex, glm::vec3(6.8, 4.6, 0));
+	spaceShip2 = manager->CreateObj(spaceShipObj2, spaceShip2Tex, glm::vec3(-5.3, 4.276, -3.160));
 	spaceShip2->SetScale(glm::vec3(0.06, 0.06, 0.06));
+	spaceShip2->SetRotate(glm::vec3(0, 133, 0));
 	spaceShip2->SetID(11);
 	spaceShip2->SetName("Space ship 2");
 	manager->AddItemToRenderer(spaceShip2);
 	/* Second Spaceship */
 
+	/* Third spaceship */
+	spaceShipObj3 = manager->LoadObjFile("objects/spaceship3.obj");
+	spaceShip3Tex = manager->LoadTexture("textures/spaceship3tex.png");
+	spaceShip3 = manager->CreateObj(spaceShipObj3, spaceShip3Tex, glm::vec3(0.420, 4.28, -2.7));
+	spaceShip3->SetScale(glm::vec3(0.08, 0.08, 0.08));
+	spaceShip3->SetRotate(glm::vec3(0, 71, 0));
+	spaceShip3->SetID(12);
+	spaceShip3->SetName("Space ship 3");
+	manager->AddItemToRenderer(spaceShip3);
+	/* Third spaceship*/
 
-	suzanne = manager->LoadObjFile("objects/suzanne.obj");
-	firstObj = manager->CreateObj(suzanne, uvmapID, glm::vec3(-3.8, 4.3, 0));
-	firstObj->AddTexture(europa);
-	firstObj->SetID(2);
-	firstObj->SetName("Monkey");
-	manager->AddItemToRenderer(firstObj);
+	/* Fourth spaceship */
+	spaceShipObj4 = manager->LoadObjFile("objects/spaceship4.obj");
+	spaceShip4Tex = manager->LoadTexture("textures/spaceship4tex.jpg");
+	spaceShip4 = manager->CreateObj(spaceShipObj4, spaceShip4Tex, glm::vec3(-2.21, 4.28, -2.851));
+	spaceShip4->SetScale(glm::vec3(0.07, 0.07, 0.07));
+	spaceShip4->SetRotate(glm::vec3(0, 111, 0));
+	spaceShip4->SetID(13);
+	spaceShip4->SetName("Space ship 4");
+	manager->AddItemToRenderer(spaceShip4);
+	/* Third spaceship*/
+
+
 
 	walls = manager->CreateObj(wallsObj, platformTexID, glm::vec3(0, 0, 0));
 
 	
+	/* Table */
+	tableObj = manager->LoadObjFile("objects/table.obj");
+	tableTex = manager->LoadTexture("textures/tabletex.jpg");
+	table = manager->CreateObj(tableObj, tableTex, glm::vec3(-1, 0.2, -3.6));
+	table->SetScale(glm::vec3(0.1, 0.1, 0.1));
+	table->SetName("Table");
+	manager->AddItemToRenderer(table);
+	/* Table */
 
+	/* Picture */
+	pictureObj = manager->LoadObjFile("objects/picture.obj");
+	pictureTex = manager->LoadTexture("textures/earth.jpg");
+	picture = manager->CreateObj(pictureObj, pictureTex, glm::vec3(-10.410, 7.873, -1.834));
+	picture->SetScale(glm::vec3(0.001, 2.3, 2.3));
+	picture->SetRotate(glm::vec3(90, 0, 0));
+	manager->AddItemToRenderer(picture);
+
+	/* Picutre */
 
 
 	walls->SetRotate(glm::vec3(0, 90, 0));
@@ -167,6 +201,8 @@ void TastyEngine::LoadObjects()
 	manager->SetActiveState("Main");
 
 	selectedObject = nullptr;
+
+
 }
 
 void TastyEngine::StartLoop()
@@ -175,7 +211,7 @@ void TastyEngine::StartLoop()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 		
-		
+		/* Menu wont draw for some reason. Gamestates do work though*/
 		if (manager->GetCurrentState() == "Menu")
 		{
 			MainMenu();
@@ -184,10 +220,9 @@ void TastyEngine::StartLoop()
 		{
 			MainGame();
 		}
+		/* Menu wont draw for some reason. Gamestates do work though*/
 
 
-
-		
 		ImGui::Render();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -233,8 +268,8 @@ void TastyEngine::MainGame()
 
 	double currentTime = glfwGetTime();
 	nbFrames++;
-	if (currentTime - lastTime >= 1.0){ // If last prinf() was more than 1 sec ago
-		// printf and reset timer
+	if (currentTime - lastTime >= 1.0)
+	{
 		printf("%f ms/frame\n", 1000.0 / double(nbFrames));
 		nbFrames = 0;
 		lastTime += 1.0;
@@ -248,6 +283,7 @@ void TastyEngine::MainGame()
 		glm::vec3 tempSpecular = selectedObject->GetSpecular();
 		glm::vec3 tempScale = selectedObject->GetScale();
 		glm::vec3 tempRotation = selectedObject->GetRotVals();
+		tempRotation = glm::vec3(glm::degrees(tempRotation.x), glm::degrees(tempRotation.y), glm::degrees(tempRotation.z));
 
 		if (selectedObject->GetName() != nullptr)
 		{
@@ -260,7 +296,7 @@ void TastyEngine::MainGame()
 		ImGui::SetWindowSize(ImVec2(300, 400));
 		if (ImGui::CollapsingHeader("Object Position"))
 		{
-			ImGui::SliderFloat("Xpos", &tempPos.x, -8.0f, 8.0f);
+			ImGui::SliderFloat("Xpos", &tempPos.x, -20.0f, 8.0f);
 			ImGui::SliderFloat("Ypos", &tempPos.y, 3.0f, 10.0f);
 			ImGui::SliderFloat("Zpos", &tempPos.z, -4.0f, 4.0f);
 		}
@@ -309,15 +345,9 @@ void TastyEngine::MainGame()
 
 
 	mars->SetRotate(glm::vec3(0, monkeyRot, 0));
-	firstObj->SetRotate(glm::vec3(0, monkeyRot, 0));
 	monkeyRot += 0.2;
-
-
+	
 	InputHandling();
-
-
-
-	//manager->TestCel(silhouetteID, 2);
 	manager->Render();
 	ImGui::Render();
 }

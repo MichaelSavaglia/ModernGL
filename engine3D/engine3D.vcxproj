@@ -21,6 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0E508E84-5782-44A5-8E1D-D5F5CB98A0B5}</ProjectGuid>
     <RootNamespace>engine3D</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,12 +77,16 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)\..\Dependencies\glew\include\GL;$(ProjectDir)\..\Dependencies\glm\glm;$(ProjectDir)\..\Dependencies\soil\src;$(ProjectDir)\..\Dependencies\glfw\include\glfw;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>soil.lib;opengl32.lib;glfw3.lib;glew32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\Dependencies\soil\lib;$(ProjectDir)..\Dependencies\glew\lib\;$(ProjectDir)..\Dependencies\glfw\libs\</AdditionalLibraryDirectories>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -136,7 +141,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Objects.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
-    <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="TastyEngine.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="tiny_obj_loader.cpp" />
@@ -160,13 +164,13 @@
     <ClInclude Include="LoadShader.h" />
     <ClInclude Include="Objects.h" />
     <ClInclude Include="OBJLoader.h" />
-    <ClInclude Include="SceneNode.h" />
     <ClInclude Include="TastyEngine.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="vboIndexer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="FragmentShader.glsl" />
     <None Include="PassThroughVert.glsl" />
     <None Include="PickFrag.glsl" />

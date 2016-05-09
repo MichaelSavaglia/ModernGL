@@ -9,5 +9,5 @@
 
 namespace loaders
 {
-	GLuint loadBMP_custom(const char* path);
+	GLuint* loadBMP_custom(const char* path);
 }

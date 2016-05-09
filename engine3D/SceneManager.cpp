@@ -20,7 +20,7 @@ namespace Manager
 		AmbientColorID = glGetUniformLocation(programID, "MaterialAmbientColorIn");
 		SpecularColorID = glGetUniformLocation(programID, "MaterialSpecularColor");
 
-		activeLight = new Light(glm::vec3(0, 9.5, 1.2), glm::vec3(1,1,1), 30);
+		activeLight = new Light(glm::vec3(-0.5, 10.0, -0.5), glm::vec3(1,1,1), 30);
 		this->programID = programID;
 		glfwGetWindowSize(window, &width, &height);
 		InitRenderTexture();
@@ -56,7 +56,7 @@ namespace Manager
 		float tempLightPower = activeLight->GetPower();
 		glm::vec3* tempLightPos = &activeLight->GetPos();
 
-		ImGui::Begin("Light data");
+		ImGui::Begin("Light options");
 		{
 			if (ImGui::CollapsingHeader("Light color"))
 			{
@@ -79,6 +79,7 @@ namespace Manager
 				ImGui::Text("Modify the inensity\n" "of the lighting");
 				ImGui::SliderFloat("Intensity", &tempLightPower, 0.0f, 100.0f);
 			}
+			
 
 			activeLight->SetColor(*tempLightColor);
 			activeLight->SetPos(*tempLightPos);
@@ -210,6 +211,51 @@ namespace Manager
 		return tempObjData;
 	}
 
+	ObjPack* SceneManager::LoadObjCustom(const char* path)
+	{
+		std::vector<glm::vec3> vertices;
+		std::vector<glm::vec2> uvs;
+		std::vector<glm::vec3> normals;
+		loaders::loadOBJ(path, vertices, uvs, normals);
+
+		std::vector<unsigned short> indices;
+		std::vector<glm::vec3> indexed_vertices;
+		std::vector<glm::vec2> indexed_uvs;
+		std::vector<glm::vec3> indexed_normals;
+		loaders::indexVBO(vertices, uvs, normals, indices, indexed_vertices, indexed_uvs, indexed_normals);
+
+		GLuint vertBuf;
+		glGenBuffers(1, &vertBuf);
+		glBindBuffer(GL_ARRAY_BUFFER, vertBuf);
+		glBufferData(GL_ARRAY_BUFFER, indexed_vertices.size() * sizeof(glm::vec3), &indexed_vertices[0], GL_STATIC_DRAW);
+
+		GLuint uvBuf;
+		glGenBuffers(1, &uvBuf);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBuf);
+		glBufferData(GL_ARRAY_BUFFER, indexed_uvs.size() * sizeof(glm::vec2), &indexed_uvs[0], GL_STATIC_DRAW);
+
+		GLuint normBuf;
+		glGenBuffers(1, &normBuf);
+		glBindBuffer(GL_ARRAY_BUFFER, normBuf);
+		glBufferData(GL_ARRAY_BUFFER, indexed_normals.size() * sizeof(glm::vec3), &indexed_normals[0], GL_STATIC_DRAW);
+
+		GLuint elemBuf;
+		glGenBuffers(1, &elemBuf);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elemBuf);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0], GL_STATIC_DRAW);
+
+
+		ObjPack* tempObjData = new ObjPack();
+		tempObjData->elementBuffer = elemBuf;
+		tempObjData->normalBuffer = normBuf;
+		tempObjData->UVBuffer = uvBuf;
+		tempObjData->vertexBuffer = vertBuf;
+		tempObjData->indicesSize = indices.size();
+		tempObjData->ID = path;
+
+		return tempObjData;
+	}
+
 	GLuint* SceneManager::LoadTexture(const char* path)
 	{
 		Textures::Texture* tex = Textures::LoadIMG(path);
@@ -220,7 +266,7 @@ namespace Manager
 
 	void SceneManager::AddItemToRenderer(Objects* obj)
 	{
-		AddObj(obj);
+		objects.push_back(obj);
 	}
 
 
@@ -239,13 +285,6 @@ namespace Manager
 	{
 		Objects* tempObj = new Objects(objData, texID, pos);
 		return tempObj;
-	}
-
-
-
-	void SceneManager::AddObj(Objects* obj)
-	{
-		objects.push_back(obj);
 	}
 
 
@@ -539,6 +578,11 @@ namespace Manager
 	const char* SceneManager::GetCurrentState()
 	{
 		return activeState;
+	}
+
+	void SceneManager::ClearRenderer()
+	{
+		objects.clear();
 	}
 }
 

@@ -9,8 +9,10 @@
 #include <glm.hpp>
 #include "tiny_obj_loader.h"
 
-struct ObjPack
+class ObjPack
 {
+public:
+
 	const char* ID; 
 	GLuint vertexBuffer;
 	GLuint UVBuffer;

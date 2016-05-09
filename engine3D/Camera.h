@@ -3,7 +3,7 @@
 #include <glfw3.h>
 
 
-// Include GLM
+
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 using namespace glm;

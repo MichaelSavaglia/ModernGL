@@ -22,6 +22,8 @@
 #include "Light.h"
 #include "imgui\imgui.h"
 #include "LoadShader.h"
+#include "OBJLoader.h"
+#include "vboIndexer.h"
 
 
 namespace Manager
@@ -47,6 +49,8 @@ namespace Manager
 
 		void AddItemToRenderer(Objects* obj);
 		void RemoveItemFromRenderer(Objects* obj);
+		void ClearRenderer();
+
 		void ShowMouse();
 		void HideMouse();
 
@@ -58,6 +62,8 @@ namespace Manager
 		bool SetActiveState(const char* state);
 		const char* GetCurrentState();
 
+		ObjPack* LoadObjCustom(const char* path);
+
 		
 
 	private:
@@ -65,7 +71,6 @@ namespace Manager
 		
 		vec3 orientation = vec3(0, 0, 0);
 
-		void AddObj(Objects* obj);
 
 		bool mouseActive = false;
 

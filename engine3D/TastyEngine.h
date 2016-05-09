@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include <list>
 
 #include <glew.h>
 #include <glfw3.h>
@@ -40,9 +41,19 @@ public:
 
 	void InputHandling();
 
+	bool sceneWave;
+
 
 private:
 	GLFWwindow* window;
+
+	float cubeYPos;
+	float monkeyYPos;
+	float marsYPos;
+	float ship1YPos;
+	float ship2YPos;
+	float speed;
+	float intensity;
 
 	GLuint programID;
 	GLuint pickingID;
@@ -72,6 +83,21 @@ private:
 	GLuint* spaceShip2Tex;
 	Objects* spaceShip2;
 
+	ObjPack* spaceShipObj3;
+	GLuint* spaceShip3Tex;
+	Objects* spaceShip3;
+
+	ObjPack* spaceShipObj4;
+	GLuint* spaceShip4Tex;
+	Objects* spaceShip4;
+
+	ObjPack* tableObj;
+	GLuint* tableTex;
+	Objects* table;
+
+	ObjPack* pictureObj;
+	GLuint* pictureTex;
+	Objects* picture;
 
 	void MainGame();
 	void MainMenu();
